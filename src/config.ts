@@ -20,8 +20,8 @@ import { LinkPreset } from "./types/config";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 const SITE_TIMEZONE = 8; //设置你的网站时区 from -12 to 12 default in UTC+8
 export const siteConfig: SiteConfig = {
-	title: "落叶Rakuyou's Blog",
-	subtitle: "My Personal Blog",
+	title: "落叶Rakuyou's Labyrinth",
+	subtitle: "My Personal Library",
 	siteURL: "https://mizuki-woad.vercel.app/", // 请替换为你的站点URL，以斜杠结尾
 	siteStartDate: "2025-12-10", // 站点开始运行日期，用于站点统计组件计算运行天数
 
@@ -37,8 +37,8 @@ export const siteConfig: SiteConfig = {
 	// 特色页面开关配置(关闭不在使用的页面有助于提升SEO,关闭后直接在顶部导航删除对应的页面就行)
 	featurePages: {
 		anime: false, // 番剧页面开关
-		diary: false, // 日记页面开关
-		friends: false, // 友链页面开关
+		diary: true, // 日记页面开关
+		friends: true, // 友链页面开关
 		projects: false, // 项目页面开关
 		skills: false, // 技能页面开关
 		timeline: true, // 时间线页面开关
@@ -135,14 +135,10 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "美しいミズキ", // 主页横幅主标题
+			title: "雲の切れ間に、月光の花", // 主页横幅主标题
 
 			subtitle: [
-				"特別なことはないけど、君がいると十分です",
-				"今でもあなたは私の光",
-				"君ってさ、知らないうちに私の毎日になってたよ",
-				"君と話すと、なんか毎日がちょっと楽しくなるんだ",
-				"今日はなんでもない日。でも、ちょっとだけいい日",
+				"秋風にたなびく雲の絶え間より、漏れ出づる月の影のさやけさ"
 			],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
@@ -244,7 +240,7 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/matsuzaka-yuki/Mizuki",
+					url: "https://github.com/SilverStr1ng",
 					external: true,
 					icon: "fa6-brands:github",
 				},
@@ -254,12 +250,12 @@ export const navBarConfig: NavBarConfig = {
 					external: true,
 					icon: "fa6-brands:bilibili",
 				},
-				{
-					name: "Gitee",
-					url: "https://gitee.com/matsuzakayuki/Mizuki",
-					external: true,
-					icon: "mdi:git",
-				},
+				// {
+				// 	name: "Gitee",
+				// 	url: "https://gitee.com/matsuzakayuki/Mizuki",
+				// 	external: true,
+				// 	icon: "mdi:git",
+				// },
 			],
 		},
 		{
@@ -267,21 +263,21 @@ export const navBarConfig: NavBarConfig = {
 			url: "/content/",
 			icon: "material-symbols:person",
 			children: [
-				{
-					name: "Anime",
-					url: "/anime/",
-					icon: "material-symbols:movie",
-				},
+				// {
+				// 	name: "Anime",
+				// 	url: "/anime/",
+				// 	icon: "material-symbols:movie",
+				// },
 				{
 					name: "Diary",
 					url: "/diary/",
 					icon: "material-symbols:book",
 				},
-				{
-					name: "Gallery",
-					url: "/albums/",
-					icon: "material-symbols:photo-library",
-				},
+				// {
+				// 	name: "Gallery",
+				// 	url: "/albums/",
+				// 	icon: "material-symbols:photo-library",
+				// },
 				{
 					name: "Devices",
 					url: "devices/",
@@ -317,11 +313,11 @@ export const navBarConfig: NavBarConfig = {
 					url: "/projects/",
 					icon: "material-symbols:work",
 				},
-				{
-					name: "Skills",
-					url: "/skills/",
-					icon: "material-symbols:psychology",
-				},
+				// {
+				// 	name: "Skills",
+				// 	url: "/skills/",
+				// 	icon: "material-symbols:psychology",
+				// },
 				{
 					name: "Timeline",
 					url: "/timeline/",
