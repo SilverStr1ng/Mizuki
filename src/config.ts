@@ -45,7 +45,7 @@ export const siteConfig: SiteConfig = {
 		skills: false, // 技能页面开关
 		timeline: true, // 时间线页面开关
 		albums: false, // 相册页面开关
-		devices: true, // 设备页面开关
+		devices: false, // 设备页面开关
 	},
 
 	// 顶栏标题配置
@@ -280,12 +280,12 @@ export const navBarConfig: NavBarConfig = {
 				// 	url: "/albums/",
 				// 	icon: "material-symbols:photo-library",
 				// },
-				{
-					name: "Devices",
-					url: "devices/",
-					icon: "material-symbols:devices",
-					external: false,
-				},
+				// {
+				// 	name: "Devices",
+				// 	url: "devices/",
+				// 	icon: "material-symbols:devices",
+				// 	external: false,
+				// },
 			],
 		},
 		{
