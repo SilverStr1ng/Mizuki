@@ -11,25 +11,25 @@
 
 /* 导入 ZenMaruGothic-Medium 字体 */
 @font-face {
-  font-family: "ZenMaruGothic-Medium";
-  src: url("/assets/font/ZenMaruGothic-Medium.woff2") format("woff2");
+  font-family: 'ZenMaruGothic-Medium';
+  src: url('/assets/font/ZenMaruGothic-Medium.ttf') format('truetype');
   font-weight: 500;
   font-display: swap;
 }
 
 /* 导入 萝莉体 第二版 字体 */
 @font-face {
-  font-family: "萝莉体 第二版";
-  src: url("/assets/font/萝莉体 第二版.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
+	font-family: "萝莉体 第二版";
+	src: url("/assets/font/萝莉体 第二版.ttf") format("truetype");
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
 }
 
 /* 导入 霞鹜文楷 字体 */
 @font-face {
     font-family: "霞鹜文楷";
-    src: url("/assets/font/LXGWWenKaiMonoScreen.woff2") format("woff2");
+    src: url("/assets/font/LXGWWenKaiMonoScreen.ttf") format("truetype");
     font-style: normal;
     font-weight: 500;
     font-display: swap;

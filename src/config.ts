@@ -32,7 +32,7 @@ export const siteConfig: SiteConfig = {
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 230, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
+		hue: 186, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
 		fixed: false, // 对访问者隐藏主题色选择器
 	},
 
@@ -188,9 +188,9 @@ export const siteConfig: SiteConfig = {
 		},
 		cjkFont: {
 			// 中日韩字体 - 作为回退字体
-			fontFamily: "霞鹜文楷",
+			fontFamily: "萝莉体 第二版",
 			fontWeight: "500",
-			localFonts: ["LXGWWenKaiMonoScreen.ttf"],
+			localFonts: ["萝莉体 第二版.ttf"],
 			enableCompress: true, // 启用字体子集优化，减少字体文件大小
 		},
 	},
