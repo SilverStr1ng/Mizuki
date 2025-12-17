@@ -27,8 +27,7 @@ category: ComputerGraphics
 
 将作为我们通向世界的窗口的矩形称为<font color="#4dfe50">视口</font>(view-port)。视口的大小和相机的距离决定了从相机可见的角度，称为<font color="#4dfe50">视场角</font>（Field of View，简称 FOV）。人类的水平视场角几乎为 180 度（尽管其中大部分是模糊的周边视觉，且缺乏深度感知）。为简化起见，我们将 $V_{w} = V_{h} = d = 1$；这会产生约 53 度的视场角，从而生成外观合理且不过度失真的图像。
 
-> [!NOTE] 
-> 53°的计算方法
+> [!NOTE] 53°的计算方法
 > ![image.png](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20251212152924.png)
 
 **现在我们回到"算法"层面, 对步骤进行编号:**
@@ -123,8 +122,7 @@ $$
 $$
 at^{2} + bt + c = 0
 $$
-> [!NOTE] 
-> 关于代数变换的详细过程
+> [!NOTE] 关于代数变换的详细过程
 
 这只是一个普通的二次方程，它的解就是射线与球体相交时参数 $t$ 的值：
 $$

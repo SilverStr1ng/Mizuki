@@ -20,6 +20,66 @@
         mask-position: center
         mask-repeat: no-repeat
         transform: translateY(-0.0625rem)
+    &.bdm-note
+      .bdm-title
+        color: var(--admonitions-color-note)
+
+        &:before
+          background: var(--admonitions-color-note)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M14.06 9L15 9.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-note)
+    &.bdm-info
+      .bdm-title
+        color: var(--admonitions-color-info)
+
+        &:before
+          background: var(--admonitions-color-info)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M11 9h2V7h-2m1 13c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8m0-18A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2m-1 15h2v-6h-2z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-info)
+    &.bdm-success
+      .bdm-title
+        color: var(--admonitions-color-success)
+
+        &:before
+          background: var(--admonitions-color-success)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-success)
+    &.bdm-warning
+      .bdm-title
+        color: var(--admonitions-color-warning)
+
+        &:before
+          background: var(--admonitions-color-warning)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M13 14h-2V9h2m0 9h-2v-2h2M1 21h22L12 2z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-warning)
+    &.bdm-danger
+      .bdm-title
+        color: var(--admonitions-color-danger)
+
+        &:before
+          background: var(--admonitions-color-danger)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M12 2c5.53 0 10 4.47 10 10s-4.47 10-10 10S2 17.53 2 12S6.47 2 12 2m3.59 5L12 10.59L8.41 7L7 8.41L10.59 12L7 15.59L8.41 17L12 13.41L15.59 17L17 15.59L13.41 12L17 8.41z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-danger)
+    &.bdm-cite
+      .bdm-title
+        color: var(--admonitions-color-cite)
+
+        &:before
+          background: var(--admonitions-color-cite)
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z'/%3E%3C/svg%3E")
+
+      &:before
+        background: var(--admonitions-color-cite)
     &.bdm-tip
       .bdm-title
         color: var(--admonitions-color-tip)
@@ -30,16 +90,6 @@
 
       &:before
         background: var(--admonitions-color-tip)
-    &.bdm-note
-      .bdm-title
-        color: var(--admonitions-color-note)
-
-        &:before
-          background: var(--admonitions-color-note)
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath fill='var(--admonitions-color-tip)' d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E")
-
-      &:before
-        background: var(--admonitions-color-note)
     &.bdm-important
       .bdm-title
         color: var(--admonitions-color-important)
@@ -50,16 +100,6 @@
 
       &:before
         background: var(--admonitions-color-important)
-    &.bdm-warning
-      .bdm-title
-        color: var(--admonitions-color-warning)
-
-        &:before
-          background: var(--admonitions-color-warning)
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' width='16' height='16' aria-hidden='true'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'%3E%3C/path%3E%3C/svg%3E")
-
-      &:before
-        background: var(--admonitions-color-warning)
     &.bdm-caution
       .bdm-title
         color: var(--admonitions-color-caution)

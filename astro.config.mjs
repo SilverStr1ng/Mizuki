@@ -11,14 +11,14 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
-import remarkDirective from "remark-directive";
-import remarkGithubAdmonitionsToDirectives from "remark-github-admonitions-to-directives";
+import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
 import { siteConfig } from "./src/config.ts";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
 import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
+import { remarkAdmonitions } from "./src/plugins/remark-admonitions.mjs";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { rehypeMermaid } from "./src/plugins/rehype-mermaid.mjs";
 import { rehypeWrapTable } from "./src/plugins/rehype-wrap-table.mjs";
@@ -121,7 +121,7 @@ export default defineConfig({
 			remarkMath,
 			remarkReadingTime,
 			remarkExcerpt,
-			remarkGithubAdmonitionsToDirectives,
+			remarkAdmonitions,
 			remarkDirective,
 			remarkSectionize,
 			parseDirectiveNode,
@@ -139,11 +139,15 @@ export default defineConfig({
 					components: {
 						github: GithubCardComponent,
 						note: (x, y) => AdmonitionComponent(x, y, "note"),
+						info: (x, y) => AdmonitionComponent(x, y, "info"),
+						success: (x, y) => AdmonitionComponent(x, y, "success"),
+						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
+						danger: (x, y) => AdmonitionComponent(x, y, "danger"),
+						cite: (x, y) => AdmonitionComponent(x, y, "cite"),
 						tip: (x, y) => AdmonitionComponent(x, y, "tip"),
 						important: (x, y) =>
 							AdmonitionComponent(x, y, "important"),
 						caution: (x, y) => AdmonitionComponent(x, y, "caution"),
-						warning: (x, y) => AdmonitionComponent(x, y, "warning"),
 					},
 				},
 			],
