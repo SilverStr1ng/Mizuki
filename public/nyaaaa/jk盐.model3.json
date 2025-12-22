@@ -11,24 +11,144 @@
 		"DisplayInfo": "jk盐.cdi3.json",
 		"Expressions": [
 			{
+				"Name": "hideRightBun",
+				"File": "后发-右小啾啾隐藏.exp3.json"
+			},
+			{
+				"Name": "hideLongHair",
+				"File": "后发-长发隐藏.exp3.json"
+			},
+			{
+				"Name": "hideLeftBun",
+				"File": "后发-左小啾啾隐藏.exp3.json"
+			},
+			{
+				"Name": "hideShoulderHair",
+				"File": "肩发-缩小~隐藏.exp3.json"
+			},
+			{
+				"Name": "gatherShoulderHair",
+				"File": "肩发-位置收拢.exp3.json"
+			},
+			{
+				"Name": "hideBloodBandage",
+				"File": "脸-绷带-血隐藏.exp3.json"
+			},
+			{
+				"Name": "hideAllBandage",
+				"File": "脸-绷带和血一起隐藏.exp3.json"
+			},
+			{
+				"Name": "darkFace",
+				"File": "脸黑.exp3.json"
+			},
+			{
+				"Name": "blushDrool",
+				"File": "脸红-痴汉嘴（兼容吐舌.exp3.json"
+			},
+			{
+				"Name": "blush",
+				"File": "脸红.exp3.json"
+			},
+			{
+				"Name": "hideBlush2",
+				"File": "脸红2隐藏.exp3.json"
+			},
+			{
+				"Name": "removeHat",
+				"File": "帽子隐藏.exp3.json"
+			},
+			{
+				"Name": "opaqueBangs",
+				"File": "前发-去掉半透.exp3.json"
+			},
+			{
+				"Name": "sweater",
+				"File": "身-毛衣.exp3.json"
+			},
+			{
+				"Name": "hideLegBlood",
+				"File": "身-腿绷带血隐藏.exp3.json"
+			},
+			{
+				"Name": "hideLegBandage",
+				"File": "身-腿绷带隐藏.exp3.json"
+			},
+			{
+				"Name": "scarf",
+				"File": "身-围巾.exp3.json"
+			},
+			{
 				"Name": "hugCat",
 				"File": "手-抱猫.exp3.json"
+			},
+			{
+				"Name": "hideBag",
+				"File": "手-手提包隐藏.exp3.json"
+			},
+			{
+				"Name": "hideEars",
+				"File": "兽耳-隐藏.exp3.json"
+			},
+			{
+				"Name": "hideTail1",
+				"File": "兽尾-隐藏1.exp3.json"
+			},
+			{
+				"Name": "hideTail2",
+				"File": "兽尾-隐藏2.exp3.json"
+			},
+			{
+				"Name": "tongueOut",
+				"File": "吐舌（也可被ios或vb面捕使用）.exp3.json"
 			},
 			{
 				"Name": "loveEyes",
 				"File": "眼-爱心眼.exp3.json"
 			},
 			{
-				"Name": "starEyes",
-				"File": "眼-星星眼.exp3.json"
+				"Name": "crying",
+				"File": "眼-哭哭.exp3.json"
 			},
 			{
 				"Name": "tearyEyes",
 				"File": "眼-泪眼汪汪.exp3.json"
 			},
 			{
-				"Name": "removeHat",
-				"File": "帽子隐藏.exp3.json"
+				"Name": "deadEyes",
+				"File": "眼-平静死鱼眼.exp3.json"
+			},
+			{
+				"Name": "angryEyes",
+				"File": "眼-生气.exp3.json"
+			},
+			{
+				"Name": "starEyes",
+				"File": "眼-星星眼.exp3.json"
+			},
+			{
+				"Name": "dizzySweat",
+				"File": "眼-眩晕流汗.exp3.json"
+			},
+			{
+				"Name": "glasses",
+				"File": "眼-眼镜.exp3.json"
+			},
+			{
+				"Name": "rightEyePink",
+				"File": "眼-右眼粉瞳色.exp3.json"
+			},
+			{
+				"Name": "leftEyePink",
+				"File": "眼-左眼粉瞳色.exp3.json"
+			},
+			{
+				"Name": "hideEyeShadow",
+				"File": "眼影隐藏.exp3.json"
+			},
+			{
+				"Name": "mouthV",
+				"File": "嘴-平静v形（不可张开.exp3.json"
 			}
 		],
 		"Motions": {

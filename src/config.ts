@@ -630,7 +630,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
 			name: "JK盐", // 模型名称
 			scale: 0.08, // 缩放比例
-			position: [-10, 60], // 位置调整 [x, y]
+			position: [0, 60], // 位置调整 [x, y]
 			stageStyle: {
 				height: 450, // 舞台高度
 			},
@@ -685,7 +685,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 		copyTips: {
 			duration: 3600,
 			priority: 3,
-			message: ["引用的时候记得标注出处，谢谢📚"],
+			message: ["引用的时候记得标注出处，谢谢"],
 		},
 	},
 	menus: {
@@ -727,6 +727,36 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			{ name: "starEyes", label: "星星眼", tip: "闪闪发光的期待~" },
 			{ name: "tearyEyes", label: "泪眼汪汪", tip: "有点感动呢..." },
 			{ name: "removeHat", label: "摘帽子", tip: "换个造型看看？" },
+			{ name: "hideRightBun", label: "隐藏右啾啾", tip: "右边的头发藏起来了" },
+			{ name: "hideLongHair", label: "隐藏长发", tip: "变成短发啦" },
+			{ name: "hideLeftBun", label: "隐藏左啾啾", tip: "左边的头发藏起来了" },
+			{ name: "hideShoulderHair", label: "隐藏肩发", tip: "肩膀清爽多了" },
+			{ name: "gatherShoulderHair", label: "收拢肩发", tip: "整理一下头发" },
+			{ name: "hideBloodBandage", label: "隐藏血绷带", tip: "伤口好啦？" },
+			{ name: "hideAllBandage", label: "隐藏所有绷带", tip: "完全康复！" },
+			{ name: "darkFace", label: "脸黑", tip: "心情不太好..." },
+			{ name: "blushDrool", label: "脸红痴汉", tip: "嘿嘿嘿..." },
+			{ name: "blush", label: "脸红", tip: "害羞了~" },
+			{ name: "hideBlush2", label: "隐藏脸红2", tip: "不害羞了" },
+			{ name: "opaqueBangs", label: "前发不透明", tip: "刘海变实了" },
+			{ name: "sweater", label: "毛衣", tip: "穿上暖和的毛衣" },
+			{ name: "hideLegBlood", label: "隐藏腿部血迹", tip: "腿上的伤好了" },
+			{ name: "hideLegBandage", label: "隐藏腿部绷带", tip: "腿上的绷带拆掉了" },
+			{ name: "scarf", label: "围巾", tip: "围上围巾就不冷了" },
+			{ name: "hideBag", label: "隐藏手提包", tip: "放下包包" },
+			{ name: "hideEars", label: "隐藏兽耳", tip: "耳朵藏起来了" },
+			{ name: "hideTail1", label: "隐藏兽尾1", tip: "尾巴藏起来了" },
+			{ name: "hideTail2", label: "隐藏兽尾2", tip: "另一条尾巴也藏起来了" },
+			{ name: "tongueOut", label: "吐舌", tip: "略略略~" },
+			{ name: "crying", label: "哭哭", tip: "呜呜呜..." },
+			{ name: "deadEyes", label: "死鱼眼", tip: "..." },
+			{ name: "angryEyes", label: "生气眼", tip: "哼！" },
+			{ name: "dizzySweat", label: "眩晕流汗", tip: "晕乎乎的..." },
+			{ name: "glasses", label: "眼镜", tip: "戴上眼镜看清楚点" },
+			{ name: "rightEyePink", label: "右眼粉瞳", tip: "右眼变色了" },
+			{ name: "leftEyePink", label: "左眼粉瞳", tip: "左眼变色了" },
+			{ name: "hideEyeShadow", label: "隐藏眼影", tip: "卸妆了？" },
+			{ name: "mouthV", label: "V形嘴", tip: ":3" },
 		],
 		menu: {
 			hideAbout: false,
