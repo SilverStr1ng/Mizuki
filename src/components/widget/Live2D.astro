@@ -34,6 +34,13 @@ import { live2dConfig } from "@/config";
 
   // @ts-ignore
   const globalWindow = window;
+  
+  console.log('Live2D: Script executing', { 
+    path: window.location.pathname, 
+    hasGlobalState: !!globalWindow[GLOBAL_STATE_KEY],
+    isSwupAvailable: !!globalWindow.swup
+  });
+
   const existingState = globalWindow[GLOBAL_STATE_KEY];
   
   let globalState = existingState;
@@ -47,6 +54,7 @@ import { live2dConfig } from "@/config";
       swupHooksAttached: false,
       rootElement: null,
       persistedNodes: [],
+      libraryStyles: null,
     };
     globalWindow[GLOBAL_STATE_KEY] = globalState;
   }
@@ -108,6 +116,121 @@ import { live2dConfig } from "@/config";
     return root;
   }
 
+  function ensureIconsInjected() {
+    if (typeof window === 'undefined') return;
+    // @ts-ignore
+    const svgString = window._iconfont_svg_string_3847283;
+    if (!svgString) {
+      // console.warn('Live2D: Iconfont string not found on window');
+      return;
+    }
+
+    // Check if symbols already exist
+    const checkSymbol = document.getElementById('icon-rest');
+    if (checkSymbol) return;
+
+    console.log('Live2D: Re-injecting SVG sprite');
+    const div = document.createElement('div');
+    div.innerHTML = svgString;
+    const svg = div.getElementsByTagName('svg')[0];
+    if (svg) {
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.position = 'absolute';
+      svg.style.width = '0';
+      svg.style.height = '0';
+      svg.style.overflow = 'hidden';
+      document.body.insertBefore(svg, document.body.firstChild);
+    }
+  }
+
+  function captureLibraryStyles() {
+    if (globalState.libraryStyles && globalState.libraryStyles.length > 0) return;
+    const styles = document.querySelectorAll('style');
+    const captured = [];
+    for (const style of styles) {
+      // Skip our own manual or restored styles
+      if (style.id === 'oml2d-manual-style' || style.id.startsWith('oml2d-restored-style')) {
+        continue;
+      }
+      
+      // Skip Astro's bundled styles if possible (usually they don't have .oml2d unless global)
+      // But oh-my-live2d styles are usually injected without ID.
+      
+      if (style.textContent && (style.textContent.includes('.oml2d-') || style.textContent.includes('#oml2d'))) {
+        // Safety check: don't capture extremely large style blocks (likely global bundles)
+        if (style.textContent.length > 50000) {
+          console.warn('Live2D: Skipping large style block to prevent issues', { length: style.textContent.length });
+          continue;
+        }
+        captured.push(style.textContent);
+        console.log('Live2D: Captured a style block', { length: style.textContent.length });
+      }
+    }
+    if (captured.length > 0) {
+      globalState.libraryStyles = captured;
+      console.log(`Live2D: Total style blocks captured: ${captured.length}`);
+    }
+  }
+
+  function restoreLibraryStyles() {
+    if (!globalState.libraryStyles || !Array.isArray(globalState.libraryStyles)) return;
+    
+    console.log('Live2D: Restoring library styles', { count: globalState.libraryStyles.length });
+    
+    globalState.libraryStyles.forEach((cssContent, index) => {
+      const styleId = `oml2d-restored-style-${index}`;
+      if (document.getElementById(styleId)) return;
+      
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = cssContent;
+      document.head.appendChild(style);
+    });
+  }
+
+  function ensureStylesInjected() {
+    if (typeof document === 'undefined') return;
+    const styleId = 'oml2d-manual-style';
+    if (document.getElementById(styleId)) return;
+
+    console.log('Live2D: Injecting manual styles');
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      .oml2d-icon, .svgfont {
+        width: 1em !important;
+        height: 1em !important;
+        fill: currentColor !important;
+        overflow: hidden !important;
+        vertical-align: -0.15em !important;
+        font-size: 24px !important;
+      }
+      .oml2d-menus-item {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      @keyframes oml2d-stage-slide-out {
+        from { transform: translateY(0%); }
+        to { transform: translateY(130%); }
+      }
+      @keyframes oml2d-stage-slide-in {
+        from { transform: translateY(130%); }
+        to { transform: translateY(0%); }
+      }
+      @keyframes oml2d-loading-rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .oml2d-loading {
+        animation: oml2d-loading-rotate 1s linear infinite;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function queueLive2DRefresh(delay = 200) {
     if (typeof window === 'undefined') {
       return;
@@ -124,6 +247,7 @@ import { live2dConfig } from "@/config";
    * 初始化 Live2D
    */
   async function initLive2D() {
+    ensureStylesInjected();
     globalState.swupReinitTimer = null;
     const container = document.getElementById('live2d-container');
     if (!container) {
@@ -146,10 +270,22 @@ import { live2dConfig } from "@/config";
 
     const configSignature = configStr;
 
+    // Ensure icons are present (they might be lost during navigation)
+    ensureIconsInjected();
+
+    console.log('Live2D: Checking reuse', {
+      hasInstance: !!globalState.instance,
+      configMatch: globalState.configSignature === configSignature,
+      oldSigLen: globalState.configSignature ? globalState.configSignature.length : 0,
+      newSigLen: configSignature ? configSignature.length : 0,
+      swupAvailable: !!window.swup
+    });
+
     // 如果配置未变化且实例已存在，直接复用，避免重新加载
     if (globalState.instance && globalState.configSignature === configSignature) {
       console.info("Live2D: reuse existing instance");
       try {
+        restoreLibraryStyles();
         const instance = globalState.instance;
         if (instance.options) {
           instance.options.parentElement = rootContainer;
@@ -230,15 +366,21 @@ import { live2dConfig } from "@/config";
               stageElement.style.transform = 'translateY(0%)';
               stageElement.style.transitionDuration = '0ms';
             }
+
+            // Reload menus and tips to ensure they are correctly attached and styled
+            // This must be done BEFORE getting idlePlayer as reload creates new instances
+            if (instance.menus && typeof instance.menus.reload === 'function') {
+              instance.menus.reload(stageElement);
+            }
+            if (instance.tips && typeof instance.tips.reload === 'function') {
+              instance.tips.reload(stageElement);
+            }
+
             if (stage.events && typeof stage.events.emit === 'function') {
               stage.events.emit('stageSlideIn');
             }
 
-            // Clear any existing tips
-            if (instance.tips && typeof instance.tips.clear === 'function') {
-              instance.tips.clear();
-            }
-
+            // Get the fresh idlePlayer instance after reload
             const idlePlayer = instance.tips?.idlePlayer;
             if (idlePlayer && typeof idlePlayer.start === 'function') {
               idlePlayer.start();
@@ -342,14 +484,28 @@ import { live2dConfig } from "@/config";
         }
         const restMessage = oml2dInstance.options?.statusBar?.restMessage;
         try {
+          // Reset forced hidden styles to allow status bar to show
+          if (oml2dInstance.statusBar && oml2dInstance.statusBar.element) {
+            oml2dInstance.statusBar.element.style.opacity = '';
+            oml2dInstance.statusBar.element.style.visibility = '';
+            oml2dInstance.statusBar.element.style.pointerEvents = 'auto';
+          }
+
           if (typeof oml2dInstance.statusBarOpen === 'function') {
             oml2dInstance.statusBarOpen(restMessage);
           }
           if (typeof oml2dInstance.clearTips === 'function') {
             oml2dInstance.clearTips();
           }
+          
+          // Ensure stage status is true so slideOut can proceed
+          if (oml2dInstance.stage) {
+            oml2dInstance.stage.status = true;
+          }
+
           if (typeof oml2dInstance.setStatusBarClickEvent === 'function') {
             oml2dInstance.setStatusBarClickEvent(() => {
+              console.log('Live2D status bar clicked (wake up)');
               if (typeof oml2dInstance.statusBarClose === 'function') {
                 oml2dInstance.statusBarClose();
               }
@@ -362,6 +518,7 @@ import { live2dConfig } from "@/config";
             });
           }
           if (typeof oml2dInstance.stageSlideOut === 'function') {
+            console.log('Live2D calling stageSlideOut');
             oml2dInstance.stageSlideOut();
           }
         } catch (restError) {
@@ -396,13 +553,16 @@ import { live2dConfig } from "@/config";
             icon: meta.icon,
             title: meta.title,
             onClick: async (oml2dInstance) => {
+              console.log('Live2D menu click:', meta.id);
               if (!oml2dInstance) {
+                console.warn('Live2D instance not found in menu click');
                 return;
               }
 
               if (meta.action === 'cycle-expression') {
                 await playNextExpression(oml2dInstance);
               } else if (meta.action === 'rest') {
+                console.log('Live2D executing rest action');
                 restAction(oml2dInstance);
               } else if (meta.action === 'about') {
                 aboutAction(meta);
@@ -496,6 +656,10 @@ import { live2dConfig } from "@/config";
       globalState.persistedNodes = Array.from(rootContainer.children);
 
       console.log('Live2D initialized successfully');
+      
+      // Capture styles after successful initialization
+      // Wait a bit longer to ensure all styles are injected
+      setTimeout(captureLibraryStyles, 200);
     } catch (error) {
       console.error('Failed to initialize Live2D:', error);
     }
@@ -613,9 +777,16 @@ import { live2dConfig } from "@/config";
     width: 1em;
     height: 1em;
     fill: currentColor;
-    vertical-align: -0.15em;
+    vertical-align: 0; /* Fix vertical alignment */
     overflow: hidden;
     font-size: 24px; /* Default size for menu icons */
+  }
+
+  /* Ensure menu items maintain layout even if library styles are lost */
+  :global(.oml2d-menus-item) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   :global(.oml2d-loading) {
@@ -625,6 +796,25 @@ import { live2dConfig } from "@/config";
   @keyframes oml2d-loading-rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  /* Restore missing keyframes for slide animations */
+  @keyframes oml2d-stage-slide-out {
+    from {
+      transform: translateY(0%);
+    }
+    to {
+      transform: translateY(130%);
+    }
+  }
+
+  @keyframes oml2d-stage-slide-in {
+    from {
+      transform: translateY(130%);
+    }
+    to {
+      transform: translateY(0%);
+    }
   }
 
   :global(#live2d-persistent-root *) {

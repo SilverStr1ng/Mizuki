@@ -630,7 +630,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
 			name: "JK盐", // 模型名称
 			scale: 0.08, // 缩放比例
-			position: [0, 60], // 位置调整 [x, y]
+			position: [-50, 60], // 位置调整 [x, y]
 			stageStyle: {
 				height: 450, // 舞台高度
 			},
@@ -675,7 +675,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 				daybreak: "早起的努力最能看见希望呢。",
 				morning: "上午好！今天也一起加油吧~",
 				noon: "中午吃饱才有力气继续冒险。",
-				afternoon: "午后适合换个表情调剂心情。",
+				afternoon: "午后要来杯咖啡吗。",
 				dusk: "傍晚了，别忘了伸伸懒腰。",
 				night: "晚上好，放松一下再继续看看内容？",
 				lateNight: "夜深了，注意休息别太晚哦。",
