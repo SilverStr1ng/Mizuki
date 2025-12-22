@@ -721,6 +721,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 		},
 	},
 	custom: {
+		defaultExpression: "sweater",
 		expressions: [
 			{ name: "hugCat", label: "抱猫猫", tip: "给你看猫猫~" },
 			{ name: "loveEyes", label: "爱心眼", tip: "喜欢的东西出现啦~" },

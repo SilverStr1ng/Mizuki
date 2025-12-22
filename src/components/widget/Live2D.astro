@@ -646,6 +646,18 @@ import { live2dConfig } from "@/config";
         instance.onLoad((status) => {
           if (status === 'success') {
             globalState.expressionState.index = 0;
+            
+            // Apply default expression if configured
+            if (customConfig.defaultExpression) {
+              console.log('Live2D: Applying default expression:', customConfig.defaultExpression);
+              setTimeout(() => {
+                try {
+                  instance.models?.model?.expression(customConfig.defaultExpression);
+                } catch (e) {
+                  console.warn('Live2D: Failed to apply default expression:', e);
+                }
+              }, 800);
+            }
           }
         });
       }
