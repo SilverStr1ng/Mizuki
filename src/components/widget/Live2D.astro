@@ -1,0 +1,633 @@
+---
+/**
+ * Live2D 看板娘组件（基于 oh-my-live2d）
+ * 
+ * 特性：
+ * - 支持 Cubism 2/3/4/5 所有版本的 Live2D 模型
+ * - 支持 moc3 格式模型
+ * - 开箱即用，无需额外依赖
+ * - 完全类型化，提供完整的 TypeScript 支持
+ * 
+ * 文档：https://oml2d.hacxy.cn/
+ */
+import { live2dConfig } from "@/config";
+---
+
+{live2dConfig.enable && (
+  <div id="live2d-container" data-config={JSON.stringify(live2dConfig)}>
+    <!-- Live2D 组件将在此处加载 -->
+  </div>
+)}
+
+<script>
+  /**
+   * Live2D 初始化脚本
+   * 
+   * 该脚本在客户端执行，负责：
+   * 1. 动态加载 oh-my-live2d 库
+   * 2. 读取配置并初始化 Live2D 实例
+   * 3. 处理页面导航时的状态保持
+   */
+  
+  // 全局状态键，确保 Live2D 仅初始化一次
+  const GLOBAL_STATE_KEY = "__mizukiLive2D__";
+
+  // @ts-ignore
+  const globalWindow = window;
+  const existingState = globalWindow[GLOBAL_STATE_KEY];
+  
+  let globalState = existingState;
+  if (!globalState) {
+    globalState = {
+      instance: null,
+      configSignature: null,
+      eventsBound: false,
+      swupListenersBound: false,
+      swupReinitTimer: null,
+      swupHooksAttached: false,
+      rootElement: null,
+      persistedNodes: [],
+    };
+    globalWindow[GLOBAL_STATE_KEY] = globalState;
+  }
+
+  if (!globalState.expressionState) {
+    globalState.expressionState = {
+      list: [],
+      index: 0,
+    };
+  }
+
+  if (typeof globalState.swupListenersBound !== 'boolean') {
+    globalState.swupListenersBound = false;
+  }
+
+  if (!('swupReinitTimer' in globalState)) {
+    globalState.swupReinitTimer = null;
+  }
+
+  if (typeof globalState.swupHooksAttached !== 'boolean') {
+    globalState.swupHooksAttached = false;
+  }
+
+  function ensureRootContainer() {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+
+    if (globalState.rootElement && globalState.rootElement.isConnected) {
+      return globalState.rootElement;
+    }
+
+    const existing = document.getElementById('live2d-persistent-root');
+    if (existing) {
+      globalState.rootElement = existing;
+      return existing;
+    }
+
+    const root = document.createElement('div');
+    root.id = 'live2d-persistent-root';
+    document.body.appendChild(root);
+
+    if (Array.isArray(globalState.persistedNodes)) {
+      globalState.persistedNodes.forEach((node) => {
+        try {
+          if (!node) {
+            return;
+          }
+          if (node.parentElement !== root) {
+            root.appendChild(node);
+          }
+        } catch (restoreError) {
+          console.warn('Live2D node restore warning:', restoreError);
+        }
+      });
+    }
+
+    globalState.rootElement = root;
+    return root;
+  }
+
+  function queueLive2DRefresh(delay = 200) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if (globalState.swupReinitTimer) {
+      clearTimeout(globalState.swupReinitTimer);
+    }
+    globalState.swupReinitTimer = window.setTimeout(() => {
+      initLive2D();
+    }, delay);
+  }
+
+  /**
+   * 初始化 Live2D
+   */
+  async function initLive2D() {
+    globalState.swupReinitTimer = null;
+    const container = document.getElementById('live2d-container');
+    if (!container) {
+      console.warn('Live2D container not found');
+      return;
+    }
+
+    const rootContainer = ensureRootContainer();
+    if (!rootContainer) {
+      console.warn('Live2D persistent root not available');
+      return;
+    }
+
+    // 读取配置
+    const configStr = container.getAttribute('data-config');
+    if (!configStr) {
+      console.warn('Live2D config not found');
+      return;
+    }
+
+    const configSignature = configStr;
+
+    // 如果配置未变化且实例已存在，直接复用，避免重新加载
+    if (globalState.instance && globalState.configSignature === configSignature) {
+      console.info("Live2D: reuse existing instance");
+      try {
+        const instance = globalState.instance;
+        if (instance.options) {
+          instance.options.parentElement = rootContainer;
+        }
+
+        if (!instance.__mizukiDebugPatched) {
+          const patchLog = (methodName) => {
+            const original = instance[methodName]?.bind(instance);
+            if (typeof original !== 'function') {
+              return;
+            }
+            instance[methodName] = async (...args) => {
+              console.debug(`Live2D debug: ${methodName} invoked`, { args, timestamp: Date.now() });
+              return original(...args);
+            };
+          };
+          ['loadModel', 'reloadModel', 'stageSlideIn', 'stageSlideOut'].forEach(patchLog);
+          instance.__mizukiDebugPatched = true;
+        }
+
+        const stage = instance.stage;
+        const stageElement = stage?.element;
+        if (stageElement) {
+          if (!stageElement.isConnected || stageElement.parentElement !== rootContainer) {
+            rootContainer.appendChild(stageElement);
+          }
+          try {
+            stageElement.style.transitionDuration = '0ms';
+            stageElement.style.transform = 'translateY(0%)';
+          } catch (styleError) {
+            console.warn('Live2D stage style reset warning:', styleError);
+          }
+        }
+
+        if (Array.isArray(globalState.persistedNodes) && globalState.persistedNodes.length > 0) {
+          globalState.persistedNodes.forEach((node) => {
+            if (!node || node === stageElement) {
+              return;
+            }
+            if (!node.isConnected || node.parentElement !== rootContainer) {
+              try {
+                rootContainer.appendChild(node);
+              } catch (appendError) {
+                console.warn('Live2D node append warning:', appendError);
+              }
+            }
+          });
+        }
+
+        if (!Array.isArray(globalState.persistedNodes) || globalState.persistedNodes.length === 0) {
+          globalState.persistedNodes = Array.from(rootContainer.children);
+        }
+
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            window.localStorage.setItem('OML2D_STATUS', 'active');
+          } catch (storageError) {
+            console.warn('Live2D status storage warning:', storageError);
+          }
+        }
+
+        if (stage) {
+          try {
+            stage.status = true;
+            if (typeof stage.setStyle === 'function') {
+              const preservedStyle = stage.style && typeof stage.style === 'object' ? { ...stage.style } : {};
+              stage.setStyle({
+                ...preservedStyle,
+                animationName: 'none',
+                animationDuration: '0ms',
+                animationFillMode: 'forwards',
+                transform: 'translateY(0%)'
+              });
+            }
+            if (stageElement) {
+              stageElement.style.animationName = 'none';
+              stageElement.style.animationDuration = '0ms';
+              stageElement.style.transform = 'translateY(0%)';
+              stageElement.style.transitionDuration = '0ms';
+            }
+            if (stage.events && typeof stage.events.emit === 'function') {
+              stage.events.emit('stageSlideIn');
+            }
+
+            // Clear any existing tips
+            if (instance.tips && typeof instance.tips.clear === 'function') {
+              instance.tips.clear();
+            }
+
+            const idlePlayer = instance.tips?.idlePlayer;
+            if (idlePlayer && typeof idlePlayer.start === 'function') {
+              idlePlayer.start();
+            }
+            
+            // Close status bar and force hide element to prevent glitches
+            if (typeof instance.statusBarClose === 'function') {
+              instance.statusBarClose();
+            }
+            if (instance.statusBar && instance.statusBar.element) {
+              instance.statusBar.element.style.opacity = '0';
+              instance.statusBar.element.style.visibility = 'hidden';
+              instance.statusBar.element.style.pointerEvents = 'none';
+            }
+            if (typeof instance.statusBarClearEvents === 'function') {
+              instance.statusBarClearEvents();
+            }
+          } catch (stageResumeError) {
+            console.warn('Live2D stage activation warning:', stageResumeError);
+          }
+        }
+
+        globalState.persistedNodes = Array.from(rootContainer.children);
+      } catch (reuseError) {
+        console.warn('Live2D stage resume warning:', reuseError);
+      }
+      return;
+    }
+
+    try {
+      const config = JSON.parse(configStr);
+      const customConfig = config.custom || {};
+      const expressionList = Array.isArray(customConfig.expressions) ? customConfig.expressions : [];
+      globalState.expressionState.list = expressionList;
+      globalState.expressionState.index = 0;
+
+      const menuConfig = customConfig.menu || {};
+      const menuItemsMeta = Array.isArray(menuConfig.items) ? menuConfig.items : [];
+      const allowAbout = menuConfig.hideAbout !== true;
+
+      const showMenuTip = (oml2d, message, duration = 3600, priority = 3) => {
+        if (!message || !oml2d || typeof oml2d.tipsMessage !== 'function') {
+          return;
+        }
+        try {
+          oml2d.tipsMessage(message, duration, priority);
+        } catch (tipError) {
+          console.warn('Live2D tipsMessage warning:', tipError);
+        }
+      };
+
+      const playNextExpression = async (oml2dInstance) => {
+        const state = globalState.expressionState;
+        if (!state.list || state.list.length === 0) {
+          showMenuTip(oml2dInstance, '当前模型暂未配置表情', 3400, 4);
+          return;
+        }
+
+        const safeIndex = state.index % state.list.length;
+        const expressionMeta = state.list[safeIndex];
+        state.index = (safeIndex + 1) % state.list.length;
+
+        const liveModel = oml2dInstance?.models?.model;
+        if (!liveModel || typeof liveModel.expression !== 'function') {
+          showMenuTip(oml2dInstance, '模型仍在初始化，请稍候再试', 3600, 4);
+          return;
+        }
+
+        try {
+          const played = await liveModel.expression(expressionMeta.name);
+          if (played) {
+            const message = expressionMeta.tip || `已切换到 ${expressionMeta.label}`;
+            showMenuTip(
+              oml2dInstance,
+              message,
+              expressionMeta.duration ?? 4200,
+              expressionMeta.priority ?? 4
+            );
+          } else {
+            showMenuTip(
+              oml2dInstance,
+              `表情 ${expressionMeta.label} 切换失败`,
+              3600,
+              5
+            );
+          }
+        } catch (expressionError) {
+          console.warn('Live2D expression apply failed:', expressionError);
+          showMenuTip(
+            oml2dInstance,
+            `切换 ${expressionMeta.label} 时出现问题`,
+            3600,
+            5
+          );
+        }
+      };
+
+      const restAction = (oml2dInstance) => {
+        if (!oml2dInstance) {
+          return;
+        }
+        const restMessage = oml2dInstance.options?.statusBar?.restMessage;
+        try {
+          if (typeof oml2dInstance.statusBarOpen === 'function') {
+            oml2dInstance.statusBarOpen(restMessage);
+          }
+          if (typeof oml2dInstance.clearTips === 'function') {
+            oml2dInstance.clearTips();
+          }
+          if (typeof oml2dInstance.setStatusBarClickEvent === 'function') {
+            oml2dInstance.setStatusBarClickEvent(() => {
+              if (typeof oml2dInstance.statusBarClose === 'function') {
+                oml2dInstance.statusBarClose();
+              }
+              if (typeof oml2dInstance.stageSlideIn === 'function') {
+                oml2dInstance.stageSlideIn();
+              }
+              if (typeof oml2dInstance.statusBarClearEvents === 'function') {
+                oml2dInstance.statusBarClearEvents();
+              }
+            });
+          }
+          if (typeof oml2dInstance.stageSlideOut === 'function') {
+            oml2dInstance.stageSlideOut();
+          }
+        } catch (restError) {
+          console.warn('Live2D rest action warning:', restError);
+        }
+      };
+
+      const aboutAction = (meta) => {
+        const targetHref = meta?.href || '/';
+        try {
+          const resolved = new URL(targetHref, window.location.origin);
+          window.open(resolved.toString(), '_blank', 'noopener');
+        } catch (_urlError) {
+          window.open(targetHref, '_blank', 'noopener');
+        }
+      };
+
+      if (!config.menus) {
+        config.menus = {};
+      }
+
+      config.menus.items = (defaultItems) => {
+        const baseItems = Array.isArray(defaultItems) ? defaultItems : [];
+        if (!menuItemsMeta.length) {
+          return baseItems.filter((item) => allowAbout || item.id !== 'About');
+        }
+
+        return menuItemsMeta
+          .filter((meta) => allowAbout || meta.action !== 'about')
+          .map((meta) => ({
+            id: meta.id,
+            icon: meta.icon,
+            title: meta.title,
+            onClick: async (oml2dInstance) => {
+              if (!oml2dInstance) {
+                return;
+              }
+
+              if (meta.action === 'cycle-expression') {
+                await playNextExpression(oml2dInstance);
+              } else if (meta.action === 'rest') {
+                restAction(oml2dInstance);
+              } else if (meta.action === 'about') {
+                aboutAction(meta);
+              }
+
+              if (meta.tip) {
+                showMenuTip(oml2dInstance, meta.tip, 3600, 3);
+              }
+            },
+          }));
+      };
+
+      delete config.custom;
+      config.parentElement = rootContainer;
+
+      // 验证必需的配置
+      if (!config.models || !Array.isArray(config.models) || config.models.length === 0) {
+        console.error('Live2D: models configuration is required');
+        return;
+      }
+      
+      // 动态导入 oh-my-live2d
+      const { loadOml2d } = await import('oh-my-live2d');
+
+      // 如果已有实例且配置发生变化，尝试优雅清理
+      if (globalState.instance && globalState.configSignature !== configSignature) {
+        try {
+          if (typeof globalState.instance.stageSlideOut === 'function') {
+            await globalState.instance.stageSlideOut();
+          }
+          if (typeof globalState.instance.clearTips === 'function') {
+            globalState.instance.clearTips();
+          }
+        } catch (e) {
+          console.warn('Live2D cleanup warning:', e);
+        }
+      }
+
+      // 构建可选配置，仅在存在时合并
+      const optionalConfig = {
+        ...(config.stageStyle && Object.keys(config.stageStyle).length > 0
+          ? { stageStyle: config.stageStyle }
+          : {}),
+        ...(config.menus ? { menus: config.menus } : {}),
+        ...(config.statusBar ? { statusBar: config.statusBar } : {}),
+        ...(config.tips ? { tips: config.tips } : {}),
+      };
+
+      // 构建配置对象，只包含有效的配置项
+      const oml2dConfig = {
+        models: config.models,
+        dockedPosition: config.dockedPosition || 'left',
+        initialStatus: config.initialStatus || 'active',
+        mobileDisplay: config.mobileDisplay ?? false,
+        primaryColor: config.primaryColor || '#38B0DE',
+        sayHello: config.sayHello ?? true,
+        transitionTime: config.transitionTime || 1000,
+        parentElement: rootContainer,
+        ...optionalConfig,
+      };
+
+      console.log('Live2D: Initializing with config:', oml2dConfig);
+
+      // 加载 Live2D
+      const instance = loadOml2d(oml2dConfig);
+      if (instance && !instance.__mizukiDebugPatched) {
+        const patchLog = (methodName) => {
+          const original = instance[methodName]?.bind(instance);
+          if (typeof original !== 'function') {
+            return;
+          }
+          instance[methodName] = async (...args) => {
+            console.debug(`Live2D debug: ${methodName} invoked`, { args, timestamp: Date.now() });
+            return original(...args);
+          };
+        };
+        ['loadModel', 'reloadModel', 'stageSlideIn', 'stageSlideOut'].forEach(patchLog);
+        instance.__mizukiDebugPatched = true;
+      }
+      if (instance && typeof instance.onLoad === 'function') {
+        instance.onLoad((status) => {
+          if (status === 'success') {
+            globalState.expressionState.index = 0;
+          }
+        });
+      }
+
+      globalState.instance = instance;
+      globalState.configSignature = configSignature;
+      globalState.rootElement = rootContainer;
+      globalState.persistedNodes = Array.from(rootContainer.children);
+
+      console.log('Live2D initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Live2D:', error);
+    }
+  }
+
+  function attachSwupHooks() {
+    if (globalState.swupHooksAttached) {
+      return;
+    }
+    if (typeof window === 'undefined' || !window.swup?.hooks?.on) {
+      return;
+    }
+
+    const hookHandler = () => queueLive2DRefresh();
+    ['page:view', 'content:replace', 'animation:in:end'].forEach((hookName) => {
+      try {
+        window.swup.hooks.on(hookName, hookHandler);
+      } catch (hookError) {
+        console.warn('Live2D swup hook warning:', hookError);
+      }
+    });
+
+    globalState.swupHooksAttached = true;
+  }
+
+  function bindSwupSupport() {
+    if (globalState.swupListenersBound) {
+      return;
+    }
+
+    const docEvents = [
+      'swup:contentReplaced',
+      'swup:pageView',
+      'swup:page:view',
+      'swup:animationInDone',
+      'swup:animation:in:end',
+    ];
+
+    docEvents.forEach((eventName) => {
+      document.addEventListener(eventName, () => queueLive2DRefresh());
+    });
+
+    attachSwupHooks();
+
+    document.addEventListener('swup:enable', () => {
+      queueLive2DRefresh(150);
+      attachSwupHooks();
+    });
+
+    globalState.swupListenersBound = true;
+  }
+
+  /**
+   * 页面加载时初始化
+   * 使用更可靠的方式确保 DOM 已准备好
+   */
+  function setupLive2D() {
+    // 确保在 DOM 完全加载后再初始化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initLive2D, 300); // 给一点延迟确保其他脚本已加载
+      });
+    } else {
+      // DOM 已经准备好，延迟一下再初始化
+      setTimeout(initLive2D, 300);
+    }
+  }
+
+  setupLive2D();
+  bindSwupSupport();
+
+  /**
+   * 处理 Astro 视图过渡（View Transitions）
+   * 在页面切换后重新初始化 Live2D
+   */
+  if (!globalState.eventsBound) {
+    const afterSwapHandler = () => {
+      setTimeout(initLive2D, 200);
+    };
+    const beforeUnloadHandler = () => {
+      if (globalState.instance && typeof globalState.instance.clearTips === 'function') {
+        try {
+          globalState.instance.clearTips();
+        } catch (e) {
+          // 忽略清理错误
+        }
+      }
+    };
+
+    document.addEventListener('astro:after-swap', afterSwapHandler);
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+    globalState.eventsBound = true;
+  }
+</script>
+
+<style>
+  /**
+   * Live2D 容器样式
+   * oh-my-live2d 会自动处理大部分样式，这里只需要确保容器不影响布局
+   */
+  :global(#live2d-container) {
+    display: none;
+  }
+
+  :global(#live2d-persistent-root) {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Fix for large icons when styles are lost during navigation */
+  :global(.svgfont),
+  :global(.oml2d-icon) {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    vertical-align: -0.15em;
+    overflow: hidden;
+    font-size: 24px; /* Default size for menu icons */
+  }
+
+  :global(.oml2d-loading) {
+    animation: oml2d-loading-rotate 1s linear infinite;
+  }
+
+  @keyframes oml2d-loading-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  :global(#live2d-persistent-root *) {
+    pointer-events: auto;
+  }
+</style>

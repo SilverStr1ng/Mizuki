@@ -160,7 +160,7 @@ export const siteConfig: SiteConfig = {
 	toc: {
 		enable: true, // 启用目录功能
 		mode: "sidebar", // 目录显示模式："float" 悬浮按钮模式，"sidebar" 侧边栏模式
-		depth: 4, // 目录深度，1-6，1 表示只显示 h1 标题，2 表示显示 h1 和 h2 标题，依此类推
+		depth: 3, // 目录深度，1-3，1 表示只显示 h1 标题，2 表示显示 h1 和 h2 标题，3 表示显示 h1-h3 标题
 		useJapaneseBadge: true, // 使用日语假名标记（あいうえお...）代替数字，开启后会将 1、2、3... 改为 あ、い、う...
 	},
 	showCoverInContent: true, // 在文章内容页显示文章封面
@@ -619,27 +619,134 @@ export const sakuraConfig: SakuraConfig = {
 	zIndex: 100, // 层级，确保樱花在合适的层级显示
 };
 
-// Pio 看板娘配置
-export const pioConfig: import("./types/config").PioConfig = {
-	enable: true, // 启用看板娘
-	models: ["/pio/models/pio/model.json"], // 默认模型路径
-	position: "left", // 默认位置在右侧
-	width: 280, // 默认宽度
-	height: 250, // 默认高度
-	mode: "draggable", // 默认为可拖拽模式
-	hiddenOnMobile: true, // 默认在移动设备上隐藏
-	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
-		touch: [
-			"What are you doing?",
-			"Stop touching me!",
-			"HENTAI!",
-			"Don't bully me like that!",
-		], // 触摸提示
-		home: "Click here to go back to homepage!", // 首页提示
-		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
-		close: "QWQ See you next time~", // 关闭提示
-		link: "https://github.com/SilverStr1ng", // 关于链接
+/**
+ * Live2D 看板娘配置（基于 oh-my-live2d）
+ * 文档：https://oml2d.hacxy.cn/
+ */
+export const live2dConfig: import("./types/config").Live2DConfig = {
+	enable: true, // 启用 Live2D 看板娘
+	models: [
+		{
+			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
+			name: "JK盐", // 模型名称
+			scale: 0.08, // 缩放比例
+			position: [0, 60], // 位置调整 [x, y]
+			stageStyle: {
+				height: 450, // 舞台高度
+			},
+		},
+	],
+	dockedPosition: "left", // 停靠位置：left 或 right
+	initialStatus: "active", // 初始状态：sleep 或 active
+	mobileDisplay: false, // 移动端不显示
+	primaryColor: "#38B0DE", // 主题色
+	sayHello: true, // 打印项目信息
+	transitionTime: 1000, // 过渡动画时长（毫秒）
+	tips: {
+		messageLine: 4,
+		style: {
+			backgroundColor: "rgba(12, 18, 30, 0.78)",
+			border: "1px solid rgba(56, 176, 222, 0.4)",
+			borderRadius: "14px",
+			boxShadow: "0 12px 36px rgba(8, 15, 26, 0.45)",
+			backdropFilter: "blur(10px)",
+			color: "#F8FAFC",
+			padding: "16px 20px",
+		},
+		mobileStyle: {
+			backgroundColor: "rgba(12, 18, 30, 0.88)",
+			borderRadius: "12px",
+			padding: "14px 16px",
+		},
+		idleTips: {
+			duration: 5200,
+			priority: 2,
+			interval: 16000,
+			message: [
+				"要不要看看最新的文章？",
+				"喝口水休息下，再继续探索吧~",
+				"点点菜单，带你换个心情。",
+			],
+		},
+		welcomeTips: {
+			duration: 6200,
+			priority: 3,
+			message: {
+				daybreak: "早起的努力最能看见希望呢。",
+				morning: "上午好！今天也一起加油吧~",
+				noon: "中午吃饱才有力气继续冒险。",
+				afternoon: "午后适合换个表情调剂心情。",
+				dusk: "傍晚了，别忘了伸伸懒腰。",
+				night: "晚上好，放松一下再继续看看内容？",
+				lateNight: "夜深了，注意休息别太晚哦。",
+				weeHours: "凌晨也在努力？记得照顾好身体~",
+			},
+		},
+		copyTips: {
+			duration: 3600,
+			priority: 3,
+			message: ["引用的时候记得标注出处，谢谢📚"],
+		},
+	},
+	menus: {
+		disable: false,
+		style: {
+			backdropFilter: "blur(8px)",
+			backgroundColor: "rgba(17, 27, 43, 0.8)",
+			borderRadius: "14px",
+			boxShadow: "0 10px 24px rgba(0, 0, 0, 0.35)",
+			padding: "10px",
+		},
+		itemStyle: {
+			backgroundColor: "rgba(56, 176, 222, 0.18)",
+			borderRadius: "12px",
+			color: "#E2F3FE",
+		},
+	},
+	statusBar: {
+		disable: false,
+		restMessage: "看板娘打个盹，戳我唤醒~",
+		switchingMessage: "正在换个新姿势...",
+		style: {
+			backgroundColor: "rgba(13, 20, 32, 0.86)",
+			border: "1px solid rgba(56, 176, 222, 0.45)",
+			borderRadius: "12px",
+			boxShadow: "0 8px 24px rgba(6, 12, 20, 0.45)",
+			color: "#E0F2FF",
+		},
+		mobileStyle: {
+			bottom: "18px",
+			right: "20px",
+			left: "auto",
+		},
+	},
+	custom: {
+		expressions: [
+			{ name: "hugCat", label: "抱猫猫", tip: "给你看猫猫~" },
+			{ name: "loveEyes", label: "爱心眼", tip: "喜欢的东西出现啦~" },
+			{ name: "starEyes", label: "星星眼", tip: "闪闪发光的期待~" },
+			{ name: "tearyEyes", label: "泪眼汪汪", tip: "有点感动呢..." },
+			{ name: "removeHat", label: "摘帽子", tip: "换个造型看看？" },
+		],
+		menu: {
+			hideAbout: false,
+			items: [
+				{
+					id: "CycleExpression",
+					title: "切换表情",
+					icon: "icon-switch",
+					action: "cycle-expression",
+					tip: "换个表情试试看",
+				},
+				{
+					id: "Rest",
+					title: "休息一下",
+					icon: "icon-rest",
+					action: "rest",
+					tip: "让看板娘先缓缓",
+				},
+			],
+		},
 	},
 };
 
@@ -651,8 +758,7 @@ export const widgetConfigs = {
 	layout: sidebarLayoutConfig,
 	sakura: sakuraConfig,
 	fullscreenWallpaper: fullscreenWallpaperConfig,
-	pio: pioConfig, // 添加 pio 配置
-	share: shareConfig, // 添加分享配置
+	live2d: live2dConfig, // Live2D 配置
 } as const;
 
 export const umamiConfig = {

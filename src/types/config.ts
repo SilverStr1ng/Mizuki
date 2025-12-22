@@ -5,6 +5,13 @@ import type {
 	WALLPAPER_FULLSCREEN,
 	WALLPAPER_NONE,
 } from "../constants/constants";
+import type {
+	MenusOptions,
+	ModelOptions,
+	Options as OML2DOptions,
+	StatusBarOptions,
+	TipsOptions,
+} from "oh-my-live2d";
 
 export type SiteConfig = {
 	title: string;
@@ -329,7 +336,7 @@ export type WidgetComponentType =
 	| "tags"
 	| "toc"
 	| "music-player"
-	| "pio" // 添加 pio 组件类型
+	| "live2d" // Live2D 看板娘组件
 	| "site-stats" // 站点统计组件
 	| "calendar" // 日历组件
 	| "custom";
@@ -418,28 +425,33 @@ export type FullscreenWallpaperConfig = {
 };
 
 /**
- * Pio 看板娘配置
+ * Live2D 看板娘配置（基于 oh-my-live2d）
  */
-export type PioConfig = {
-	enable: boolean; // 是否启用看板娘
-	models?: string[]; // 模型文件路径数组
-	position?: "left" | "right"; // 看板娘位置
-	width?: number; // 看板娘宽度
-	height?: number; // 看板娘高度
-	mode?: "static" | "fixed" | "draggable"; // 展现模式
-	hiddenOnMobile?: boolean; // 是否在移动设备上隐藏
-	dialog?: {
-		welcome?: string | string[]; // 欢迎词
-		touch?: string | string[]; // 触摸提示
-		home?: string; // 首页提示
-		skin?: [string, string]; // 换装提示 [切换前, 切换后]
-		close?: string; // 关闭提示
-		link?: string; // 关于链接
-		custom?: Array<{
-			selector: string; // CSS选择器
-			type: "read" | "link"; // 类型
-			text?: string; // 自定义文本
+export type Live2DConfig = Omit<OML2DOptions, "models"> & {
+	enable: boolean;
+	models: ModelOptions[];
+	tips?: TipsOptions | ((currentModel: ModelOptions, modelIndex: number) => TipsOptions);
+	statusBar?: StatusBarOptions;
+	menus?: MenusOptions | ((currentModel: ModelOptions, modelIndex: number) => MenusOptions);
+	custom?: {
+		expressions?: Array<{
+			name: string;
+			label: string;
+			tip?: string;
+			priority?: number;
+			duration?: number;
 		}>;
+		menu?: {
+			hideAbout?: boolean;
+			items?: Array<{
+				id: string;
+				title: string;
+				icon: string;
+				action: "cycle-expression" | "rest" | "about";
+				tip?: string;
+				href?: string;
+			}>;
+		};
 	};
 };
 
