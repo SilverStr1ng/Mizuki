@@ -630,7 +630,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
 			name: "JK盐", // 模型名称
 			scale: 0.08, // 缩放比例
-			position: [-50, 60], // 位置调整 [x, y]
+			position: [-10, 60], // 位置调整 [x, y]
 			stageStyle: {
 				height: 450, // 舞台高度
 			},
@@ -743,7 +743,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 					title: "休息一下",
 					icon: "icon-rest",
 					action: "rest",
-					tip: "让看板娘先缓缓",
+					tip: "让我休息一下",
 				},
 			],
 		},
