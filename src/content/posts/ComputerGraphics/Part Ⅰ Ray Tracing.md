@@ -4,7 +4,7 @@ description: Translation of the book, Computer Graphics from Scratch A Programme
 published: 2025-12-17
 pinned: true
 tags:
-  - TraceRay
+  - RayTracing
   - ComputerGraphics
 draft: false
 category: ComputerGraphics
