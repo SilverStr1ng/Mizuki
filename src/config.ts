@@ -630,7 +630,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
 			name: "JK盐", // 模型名称
 			scale: 0.08, // 缩放比例
-			position: [-10, 100], // 位置调整 [x, y]
+			position: [-30, 100], // 位置调整 [x, y]
 			stageStyle: {
 				height: 450, // 舞台高度
 			},
