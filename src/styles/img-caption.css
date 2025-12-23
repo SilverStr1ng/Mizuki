@@ -1,0 +1,21 @@
+/* 图片说明样式 */
+figure.img-caption {
+  @apply my-6 mx-auto;
+  max-width: 100%;
+}
+
+figure.img-caption img {
+  @apply rounded-lg shadow-md w-full;
+  display: block;
+}
+
+figure.img-caption figcaption {
+  @apply text-center text-sm mt-3 px-4;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Dark mode 支持 */
+:root.dark figure.img-caption figcaption {
+  color: var(--color-text-muted);
+}
