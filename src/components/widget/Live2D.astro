@@ -372,18 +372,39 @@ import { live2dConfig } from "@/config";
             if (instance.menus && typeof instance.menus.reload === 'function') {
               instance.menus.reload(stageElement);
             }
+            
+            // Hide tips element before reload to prevent position flash
+            if (instance.tips && instance.tips.element) {
+              instance.tips.element.style.opacity = '0';
+            }
+            
             if (instance.tips && typeof instance.tips.reload === 'function') {
               instance.tips.reload(stageElement);
+              
+              // Restore visibility after position calculation
+              setTimeout(() => {
+                if (instance.tips && instance.tips.element) {
+                  instance.tips.element.style.opacity = '';
+                }
+              }, 50);
             }
 
             if (stage.events && typeof stage.events.emit === 'function') {
               stage.events.emit('stageSlideIn');
             }
 
-            // Get the fresh idlePlayer instance after reload
+            // Get the fresh idlePlayer instance after reload and restart with proper config
             const idlePlayer = instance.tips?.idlePlayer;
-            if (idlePlayer && typeof idlePlayer.start === 'function') {
-              idlePlayer.start();
+            if (idlePlayer) {
+              // Stop first to clear any existing timers
+              if (typeof idlePlayer.stop === 'function') {
+                idlePlayer.stop();
+              }
+              // Restart with fresh config
+              if (typeof idlePlayer.start === 'function') {
+                idlePlayer.start();
+              }
+              console.log('Live2D: IdlePlayer restarted with interval:', instance.options?.tips?.idleTips?.interval);
             }
             
             // Close status bar and force hide element to prevent glitches
@@ -821,6 +842,16 @@ import { live2dConfig } from "@/config";
     position: fixed;
     pointer-events: none;
     z-index: 9999;
+  }
+
+  /* Prevent tips flash at incorrect position during initialization */
+  :global(.oml2d-tips) {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  :global(.oml2d-tips.oml2d-tips-active) {
+    opacity: 1;
   }
 
   /* Fix for large icons when styles are lost during navigation */
