@@ -641,7 +641,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 	mobileDisplay: false, // 移动端不显示
 	primaryColor: "#38B0DE", // 主题色
 	sayHello: true, // 打印项目信息
-	transitionTime: 1000, // 过渡动画时长（毫秒）
+	transitionTime: 3000, // 过渡动画时长（毫秒）
 	tips: {
 		messageLine: 4,
 		style: {
