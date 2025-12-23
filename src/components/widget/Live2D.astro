@@ -378,33 +378,36 @@ import { live2dConfig } from "@/config";
               instance.tips.element.style.opacity = '0';
             }
             
-            if (instance.tips && typeof instance.tips.reload === 'function') {
-              instance.tips.reload(stageElement);
-              
-              // Restore visibility after position calculation
-              setTimeout(() => {
-                if (instance.tips && instance.tips.element) {
-                  instance.tips.element.style.opacity = '';
-                }
-              }, 50);
+            // Skip tips reload to prevent re-triggering welcome messages on navigation
+            // Only reload on first initialization, not on page switches
+            // if (instance.tips && typeof instance.tips.reload === 'function') {
+            //   instance.tips.reload(stageElement);
+            //   
+            //   // Restore visibility after position calculation
+            //   setTimeout(() => {
+            //     if (instance.tips && instance.tips.element) {
+            //       instance.tips.element.style.opacity = '';
+            //     }
+            //   }, 50);
+            // }
+            
+            // Just restore visibility without reload
+            if (instance.tips && instance.tips.element) {
+              instance.tips.element.style.opacity = '';
             }
 
             if (stage.events && typeof stage.events.emit === 'function') {
               stage.events.emit('stageSlideIn');
             }
 
-            // Get the fresh idlePlayer instance after reload and restart with proper config
+            // Restart idlePlayer without re-triggering welcome tips
             const idlePlayer = instance.tips?.idlePlayer;
             if (idlePlayer) {
-              // Stop first to clear any existing timers
-              if (typeof idlePlayer.stop === 'function') {
-                idlePlayer.stop();
-              }
-              // Restart with fresh config
-              if (typeof idlePlayer.start === 'function') {
+              // Just ensure it's running, don't stop/restart to avoid welcome tips
+              if (typeof idlePlayer.start === 'function' && !idlePlayer.timer) {
                 idlePlayer.start();
+                console.log('Live2D: IdlePlayer started with interval:', instance.options?.tips?.idleTips?.interval);
               }
-              console.log('Live2D: IdlePlayer restarted with interval:', instance.options?.tips?.idleTips?.interval);
             }
             
             // Close status bar and force hide element to prevent glitches
