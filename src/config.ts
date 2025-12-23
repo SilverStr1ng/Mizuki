@@ -661,14 +661,14 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 		idleTips: {
 			duration: 5000,
 			priority: 2,
-			interval: 30000,
+			interval: 300000,
 			message: [
 				"要不要看看最新的文章？",
 				"喝口水休息下，再继续探索吧~",
 			],
 		},
 		welcomeTips: {
-			duration: 5000,
+			duration: 3000,
 			priority: 3,
 			message: {
 				daybreak: "早起的努力最能看见希望呢。",
