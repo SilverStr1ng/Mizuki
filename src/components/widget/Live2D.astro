@@ -748,6 +748,47 @@ import { live2dConfig } from "@/config";
    * 在页面切换后重新初始化 Live2D
    */
   if (!globalState.eventsBound) {
+    // Manual copy event handler
+    const triggerCopyTip = () => {
+      if (!globalState.instance) return;
+      
+      let copyTipsConfig = null;
+      try {
+        const container = document.getElementById('live2d-container');
+        if (container) {
+          const config = JSON.parse(container.getAttribute('data-config'));
+          copyTipsConfig = config.tips?.copyTips;
+        }
+      } catch (e) { }
+
+      if (copyTipsConfig && copyTipsConfig.message) {
+        const msg = Array.isArray(copyTipsConfig.message) 
+          ? copyTipsConfig.message[Math.floor(Math.random() * copyTipsConfig.message.length)] 
+          : copyTipsConfig.message;
+        
+        if (typeof globalState.instance.tipsMessage === 'function') {
+          globalState.instance.tipsMessage(msg, copyTipsConfig.duration || 3000, copyTipsConfig.priority || 3);
+        }
+      }
+    };
+
+    window.addEventListener('copy', triggerCopyTip);
+    
+    // Handle click on copy buttons (e.g. Expressive Code)
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      const btn = target.closest('button');
+      if (btn) {
+        // Check for common copy button indicators
+        if (btn.classList.contains('copy') || 
+            btn.className.includes('copy-btn') ||
+            btn.getAttribute('aria-label')?.toLowerCase().includes('copy') ||
+            btn.getAttribute('data-code-copy')) {
+          triggerCopyTip();
+        }
+      }
+    });
+
     const afterSwapHandler = () => {
       setTimeout(initLive2D, 200);
     };
