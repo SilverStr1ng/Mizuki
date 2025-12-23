@@ -371,8 +371,7 @@ const jsonLd = {
                 <script is:inline>
                     function runtime() {
                         const lastModifiedElement = document.getElementById('last-modified');
-                        if (!lastModifiedElement) return;  // 如果元素不存在，直接返回
-                        
+                        if (!lastModifiedElement) return;
                         const startDate = new Date(lastModifiedElement.dataset.lastModified);
                         const currentDate = new Date();
                         const diff = currentDate - startDate;
@@ -418,7 +417,11 @@ const jsonLd = {
 
                         document.getElementById("modifiedtime").innerHTML = runtimeString;
                     }
-                    setInterval(runtime, 1000);
+                    const runtimeTimer = setInterval(runtime, 1000);
+                    // 确保在页面切换时清除定时器
+                    document.addEventListener('swup:contentReplaced', () => {
+                        clearInterval(runtimeTimer);
+                    }, { once: true });
                 </script>
                 <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-[var(--enter-btn-bg)]">

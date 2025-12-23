@@ -48,7 +48,7 @@ export default defineConfig({
 			preload: true, // swup 默认鼠标悬停预加载
 			accessibility: true,
 			updateHead: true,
-			updateBodyClass: false,
+			updateBodyClass: true,
 			globalInstance: true,
 			// 滚动相关配置优化
 			resolveUrl: (url) => url,
