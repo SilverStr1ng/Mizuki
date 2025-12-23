@@ -659,17 +659,16 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			padding: "14px 16px",
 		},
 		idleTips: {
-			duration: 5200,
+			duration: 5000,
 			priority: 2,
-			interval: 16000,
+			interval: 30000,
 			message: [
 				"要不要看看最新的文章？",
 				"喝口水休息下，再继续探索吧~",
-				"点点菜单，带你换个心情。",
 			],
 		},
 		welcomeTips: {
-			duration: 6200,
+			duration: 5000,
 			priority: 3,
 			message: {
 				daybreak: "早起的努力最能看见希望呢。",
@@ -683,8 +682,8 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			},
 		},
 		copyTips: {
-			duration: 3600,
-			priority: 3,
+			duration: 5000,
+			priority: 1,
 			message: ["引用的时候记得标注出处，谢谢"],
 		},
 	},
