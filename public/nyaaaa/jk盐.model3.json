@@ -149,6 +149,18 @@
 			{
 				"Name": "mouthV",
 				"File": "嘴-平静v形（不可张开.exp3.json"
+			},
+			{
+				"Name": "setWinter",
+				"File": "set-冬服.exp3.json"
+			},
+			{
+				"Name": "setShortHair",
+				"File": "set-短发.exp3.json"
+			},
+			{
+				"Name": "setReset",
+				"File": "set-默认.exp3.json"
 			}
 		],
 		"Motions": {

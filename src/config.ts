@@ -710,15 +710,11 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 		},
 	},
 	custom: {
-		defaultExpression: "sweater",
+		defaultExpression: "setWinter",
 		expressions: [
-			{ name: "sweater", label: "毛衣", tip: "穿上暖和的毛衣" },
-			{ name: "hugCat", label: "抱猫猫", tip: "给你看猫猫~" },
-			{ name: "loveEyes", label: "爱心眼", tip: "喜欢的东西出现啦~" },
-			{ name: "starEyes", label: "星星眼", tip: "闪闪发光的期待~" },
-			{ name: "blush", label: "脸红", tip: "害羞了~" },
-			{ name: "crying", label: "哭哭", tip: "呜呜呜..." },
-			{ name: "glasses", label: "眼镜", tip: "戴上眼镜看清楚点" },
+			{ name: "setReset", label: "默认", tip: "恢复初始状态" },
+			{ name: "setWinter", label: "冬服", tip: "穿上暖和的冬装" },
+			{ name: "setShortHair", label: "短发", tip: "切换到清爽的短发" },
 		],
 		menu: {
 			items: [
