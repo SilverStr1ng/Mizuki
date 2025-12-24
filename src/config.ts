@@ -411,7 +411,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "Announcement", // 公告标题
-	content: "Welcome to my blog! This is a sample announcement.", // 公告内容
+	content: "欢迎来到我的博客！我会分享一些关于计算机图形学、OpenGL 和图形编程的知识。", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
@@ -630,7 +630,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
 			name: "JK盐", // 模型名称
 			scale: 0.08, // 缩放比例
-			position: [-40, 100], // 位置调整 [x, y]，x=10 让模型靠近左边但不被裁剪
+			position: [-40, 100], // 位置调整 [x, y]
 			stageStyle: {
 				height: 450, // 舞台高度
 			},
@@ -640,10 +640,10 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 	initialStatus: "active", // 初始状态：sleep 或 active
 	mobileDisplay: false, // 移动端不显示
 	primaryColor: "#38B0DE", // 主题色
-	sayHello: true, // 打印项目信息
-	transitionTime: 3000, // 过渡动画时长（毫秒）
+	sayHello: false, // 打印项目信息
+	transitionTime: 1000, // 过渡动画时长（毫秒）
 	tips: {
-		messageLine: 4,
+		messageLine: 3,
 		style: {
 			backgroundColor: "rgba(12, 18, 30, 0.78)",
 			border: "1px solid rgba(56, 176, 222, 0.4)",
@@ -653,15 +653,10 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			color: "#F8FAFC",
 			padding: "16px 20px",
 		},
-		mobileStyle: {
-			backgroundColor: "rgba(12, 18, 30, 0.88)",
-			borderRadius: "12px",
-			padding: "14px 16px",
-		},
 		idleTips: {
 			duration: 5000,
 			priority: 2,
-			interval: 300000,
+			interval: 30000,
 			message: [
 				"要不要看看最新的文章？",
 				"喝口水休息下，再继续探索吧~",
@@ -675,7 +670,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 				morning: "上午好！今天也一起加油吧~",
 				noon: "中午吃饱才有力气继续冒险。",
 				afternoon: "午后要来杯咖啡吗。",
-				dusk: "傍晚了，别忘了伸伸懒腰。",
+				dusk: "傍晚了，别忘了伸伸腰。",
 				night: "晚上好，放松一下再继续看看内容？",
 				lateNight: "夜深了，注意休息别太晚哦。",
 				weeHours: "凌晨也在努力？记得照顾好身体~",
@@ -704,7 +699,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 	},
 	statusBar: {
 		disable: false,
-		restMessage: "看板娘打个盹，戳我唤醒~",
+		restMessage: "猫猫休息中，戳我唤醒~",
 		switchingMessage: "正在换个新姿势...",
 		style: {
 			backgroundColor: "rgba(13, 20, 32, 0.86)",
@@ -713,53 +708,19 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			boxShadow: "0 8px 24px rgba(6, 12, 20, 0.45)",
 			color: "#E0F2FF",
 		},
-		mobileStyle: {
-			bottom: "18px",
-			right: "20px",
-			left: "auto",
-		},
 	},
 	custom: {
 		defaultExpression: "sweater",
 		expressions: [
+			{ name: "sweater", label: "毛衣", tip: "穿上暖和的毛衣" },
 			{ name: "hugCat", label: "抱猫猫", tip: "给你看猫猫~" },
 			{ name: "loveEyes", label: "爱心眼", tip: "喜欢的东西出现啦~" },
 			{ name: "starEyes", label: "星星眼", tip: "闪闪发光的期待~" },
-			{ name: "tearyEyes", label: "泪眼汪汪", tip: "有点感动呢..." },
-			{ name: "removeHat", label: "摘帽子", tip: "换个造型看看？" },
-			{ name: "hideRightBun", label: "隐藏右啾啾", tip: "右边的头发藏起来了" },
-			{ name: "hideLongHair", label: "隐藏长发", tip: "变成短发啦" },
-			{ name: "hideLeftBun", label: "隐藏左啾啾", tip: "左边的头发藏起来了" },
-			{ name: "hideShoulderHair", label: "隐藏肩发", tip: "肩膀清爽多了" },
-			{ name: "gatherShoulderHair", label: "收拢肩发", tip: "整理一下头发" },
-			{ name: "hideBloodBandage", label: "隐藏血绷带", tip: "伤口好啦？" },
-			{ name: "hideAllBandage", label: "隐藏所有绷带", tip: "完全康复！" },
-			{ name: "darkFace", label: "脸黑", tip: "心情不太好..." },
-			{ name: "blushDrool", label: "脸红痴汉", tip: "嘿嘿嘿..." },
 			{ name: "blush", label: "脸红", tip: "害羞了~" },
-			{ name: "hideBlush2", label: "隐藏脸红2", tip: "不害羞了" },
-			{ name: "opaqueBangs", label: "前发不透明", tip: "刘海变实了" },
-			{ name: "sweater", label: "毛衣", tip: "穿上暖和的毛衣" },
-			{ name: "hideLegBlood", label: "隐藏腿部血迹", tip: "腿上的伤好了" },
-			{ name: "hideLegBandage", label: "隐藏腿部绷带", tip: "腿上的绷带拆掉了" },
-			{ name: "scarf", label: "围巾", tip: "围上围巾就不冷了" },
-			{ name: "hideBag", label: "隐藏手提包", tip: "放下包包" },
-			{ name: "hideEars", label: "隐藏兽耳", tip: "耳朵藏起来了" },
-			{ name: "hideTail1", label: "隐藏兽尾1", tip: "尾巴藏起来了" },
-			{ name: "hideTail2", label: "隐藏兽尾2", tip: "另一条尾巴也藏起来了" },
-			{ name: "tongueOut", label: "吐舌", tip: "略略略~" },
 			{ name: "crying", label: "哭哭", tip: "呜呜呜..." },
-			{ name: "deadEyes", label: "死鱼眼", tip: "..." },
-			{ name: "angryEyes", label: "生气眼", tip: "哼！" },
-			{ name: "dizzySweat", label: "眩晕流汗", tip: "晕乎乎的..." },
 			{ name: "glasses", label: "眼镜", tip: "戴上眼镜看清楚点" },
-			{ name: "rightEyePink", label: "右眼粉瞳", tip: "右眼变色了" },
-			{ name: "leftEyePink", label: "左眼粉瞳", tip: "左眼变色了" },
-			{ name: "hideEyeShadow", label: "隐藏眼影", tip: "卸妆了？" },
-			{ name: "mouthV", label: "V形嘴", tip: ":3" },
 		],
 		menu: {
-			hideAbout: false,
 			items: [
 				{
 					id: "CycleExpression",

@@ -102,8 +102,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       oh-my-live2d:
-        specifier: ^0.19.3
-        version: 0.19.3
+        specifier: file:./libs/oh-my-live2d
+        version: file:libs/oh-my-live2d
       overlayscrollbars:
         specifier: ^2.13.0
         version: 2.13.0
@@ -4139,8 +4139,8 @@ packages:
   ofetch@1.5.1:
     resolution: {integrity: sha512-2W4oUZlVaqAPAil6FUg/difl6YhqhUR7x2eZY4bQCko22UXg3hptq9KLQdqFClV+Wu85UX7hNtdGTngi/1BxcA==}
 
-  oh-my-live2d@0.19.3:
-    resolution: {integrity: sha512-EWva8OUmcExIFIhqGkeiVPQt44RvYYFg+nmpkrZgQVQ+xofVFq4SDYAg5NcdK40HxyV4vORBJEg4OHIHP96MrA==}
+  oh-my-live2d@file:libs/oh-my-live2d:
+    resolution: {directory: libs/oh-my-live2d, type: directory}
 
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
@@ -10661,7 +10661,7 @@ snapshots:
       node-fetch-native: 1.6.7
       ufo: 1.6.1
 
-  oh-my-live2d@0.19.3: {}
+  oh-my-live2d@file:libs/oh-my-live2d: {}
 
   ohash@2.0.11: {}
 

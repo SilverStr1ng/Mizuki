@@ -434,6 +434,7 @@ export type Live2DConfig = Omit<OML2DOptions, "models"> & {
 	statusBar?: StatusBarOptions;
 	menus?: MenusOptions | ((currentModel: ModelOptions, modelIndex: number) => MenusOptions);
 	custom?: {
+		defaultExpression?: string;
 		expressions?: Array<{
 			name: string;
 			label: string;
