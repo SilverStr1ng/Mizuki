@@ -66,6 +66,7 @@ export class Models {
 
       // 模型点击区域被点击
       this.model.on('hit', (names: string[]) => {
+        console.log('[OML2D] Model hit event from PIXI:', names);
         this.events.emit('hit', names);
         this.playRandomMotion(names);
       });

@@ -28,10 +28,10 @@ export class OhMyLive2D implements Oml2dProperties, Oml2dMethods, Oml2dEvents {
   private globalStyle: GlobalStyle;
   private stage: Stage;
   private statusBar: StatusBar;
-  private tips: Tips;
+  public tips: Tips;
   private menus: Menus;
   private models: Models;
-  private pixiApp?: PixiApp;
+  public pixiApp?: PixiApp;
   private _modelIndex: number = 0;
   private _modelClothesIndex: number = 0;
   private isFirstLoad = true;
@@ -502,6 +502,15 @@ export class OhMyLive2D implements Oml2dProperties, Oml2dMethods, Oml2dEvents {
     this.statusBar.clearClickEvent();
     this.statusBar.clearHoverEvent();
   }
+  /**
+   * 模型点击事件监听
+   * @param fn
+   */
+  onHit(fn: EventFn): void {
+    console.log('[OML2D] Registering onHit listener');
+    this.events.add('hit', fn);
+  }
+
   /**
    * 舞台滑入动画执行完毕后的事件监听
    * @param fn

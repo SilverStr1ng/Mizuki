@@ -239,6 +239,13 @@ export interface Oml2dEvents {
   onLoad: (fn: (status: 'loading' | 'success' | 'fail') => void | Promise<void>) => void;
 
   /**
+   * 模型点击事件
+   * @param fn 事件回调
+   * @returns
+   */
+  onHit: (fn: (names: string[]) => void | Promise<void>) => void;
+
+  /**
    * 舞台完全滑入事件
    * @usage
    * <<< @/usages/events.ts#onStageSlideIn

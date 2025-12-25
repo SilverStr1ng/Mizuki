@@ -18,6 +18,26 @@ export class Live2DManager {
   private rootElement: HTMLElement | null = null;
   private currentExpressionIndex = -1;
 
+  /**
+   * 定义不同时间段的提示语池
+   */
+  private readonly TIME_BASED_TIPS = {
+    morning: ["早安！又是充满活力的一天。", "早起记得喝杯温水哦。", "晨曦微露，适合开始学习。"],
+    afternoon: ["午后容易困倦，喝杯咖啡提提神吧。", "下午好，工作辛苦了。", "阳光正好，出去走走吗？"],
+    evening: ["夕阳很美，准备吃晚餐了吗？", "忙碌了一天，辛苦啦。", "晚风拂面，感觉很舒服。"],
+    night: ["夜深了，早点休息，晚安。", "熬夜对身体不好哦，快去睡觉吧。", "还在忙吗？注意保护眼睛。"]
+  };
+
+  /**
+   * 闲置提示语池（Idle Tips）
+   */
+  private readonly IDLE_TIPS_POOLS = {
+    morning: ["清晨的空气真好呢。", "今天也要元气满满哦！", "准备好开始一天的冒险了吗？"],
+    afternoon: ["午后的阳光暖洋洋的。", "要不要休息一下，喝杯下午茶？", "工作/学习之余也要记得活动下身体。"],
+    evening: ["天色暗下来了呢。", "忙碌了一天，辛苦啦。", "晚饭想吃什么好吃的？"],
+    night: ["夜深了，世界都安静了。", "还不打算睡觉吗？熬夜很伤身的。", "晚安，愿你有个好梦。"]
+  };
+
   private constructor() {
     if (typeof window !== 'undefined') {
       // 尝试从 sessionStorage 恢复欢迎语状态，确保刷新页面也不重复触发
@@ -93,6 +113,16 @@ export class Live2DManager {
       
       this.oml2d = loadOml2d(processedConfig);
 
+      console.log('[OML2D] Instance created, registering onHit');
+      // 立即注册模型点击事件，不要等待 onLoad
+      if (typeof this.oml2d.onHit === 'function') {
+        this.oml2d.onHit((names: string[]) => {
+          this.handleModelClick('PIXI', names);
+        });
+      } else {
+        console.warn('[OML2D] onHit method not found on instance');
+      }
+
       this.oml2d.onLoad((status: string) => {
         console.log('[OML2D] Library onLoad status:', status);
         this.isInitializing = false;
@@ -111,15 +141,24 @@ export class Live2DManager {
   }
 
   /**
-   * 预处理配置，禁用自动欢迎语
+   * 预处理配置，禁用自动欢迎语并设置动态闲置提示
    */
   private preprocessConfig(config: Live2DConfig): any {
     // 深度克隆配置以避免修改原始对象
     const finalConfig = JSON.parse(JSON.stringify(config));
     
-    // 彻底禁用库内置的欢迎语触发（v0.19.3 库源码中没有 enable 开关，直接清空消息）
+    // 彻底禁用库内置的欢迎语触发
     if (finalConfig.tips?.welcomeTips) {
       finalConfig.tips.welcomeTips.message = {};
+    }
+
+    // 设置动态闲置提示语
+    if (finalConfig.tips?.idleTips) {
+      finalConfig.tips.idleTips.message = () => {
+        const period = this._getCurrentTimePeriod();
+        const pool = this.IDLE_TIPS_POOLS[period];
+        return pool[Math.floor(Math.random() * pool.length)];
+      };
     }
     
     // 设置父容器为持久化根节点
@@ -170,6 +209,36 @@ export class Live2DManager {
     return finalConfig;
   }
 
+  private lastClickTime = 0;
+
+  /**
+   * 统一处理点击事件
+   */
+  private handleModelClick(source: string, areas?: string[]): void {
+    const now = Date.now();
+    // 500ms 内防止重复触发
+    if (now - this.lastClickTime < 500) return;
+    this.lastClickTime = now;
+
+    console.log(`[OML2D] Click detected from ${source}`, areas ? `areas: ${areas.join(', ')}` : '');
+    const tip = this._getRandomTipByTime();
+    this.setExpressionSafely('smile', tip);
+  }
+
+  /**
+   * 注册 Canvas 点击事件（作为 PIXI hit 事件的补充/兜底）
+   */
+  private registerCanvasClick(): void {
+    const canvas = document.getElementById('oml2d-canvas');
+    if (canvas) {
+      canvas.onclick = (event) => {
+        event.stopPropagation();
+        this.handleModelClick('DOM');
+      };
+      console.log('[OML2D] Canvas DOM click listener registered');
+    }
+  }
+
   /**
    * 首次加载成功后的处理
    */
@@ -184,7 +253,7 @@ export class Live2DManager {
     
     // 3. 触发欢迎语（仅限首次）
     if (!this.welcomeShown) {
-      this.triggerWelcomeTips(config);
+      this.showWelcomeMessageByTime();
       this.welcomeShown = true;
       sessionStorage.setItem('oml2d_welcome_shown', 'true');
     }
@@ -196,6 +265,9 @@ export class Live2DManager {
     if (this.oml2d.tips?.idlePlayer) {
       this.oml2d.tips.idlePlayer.start();
     }
+
+    // 6. 注册点击事件
+    this.registerCanvasClick();
   }
 
   /**
@@ -228,6 +300,7 @@ export class Live2DManager {
    */
   private setExpressionSafely(name: string, tip?: string): void {
     if (!this.oml2d) return;
+    console.log('[OML2D] setExpressionSafely called:', { name, tip });
 
     try {
       // 优先使用 Fork 版本新增的顶层方法
@@ -242,8 +315,14 @@ export class Live2DManager {
       }
 
       // 显示提示
-      if (tip && this.oml2d.tipsMessage) {
-        this.oml2d.tipsMessage(tip, 3000, 3);
+      if (tip) {
+        if (this.oml2d.tips?.notification) {
+          this.oml2d.tips.notification(tip, 3000, 3);
+        } else if (this.oml2d.tips?.show) {
+          this.oml2d.tips.show(tip, 3000);
+        } else if (this.oml2d.tipsMessage) {
+          this.oml2d.tipsMessage(tip, 3000, 3);
+        }
       }
     } catch (e) {
       console.error('[OML2D] Failed to set expression:', e);
@@ -299,34 +378,47 @@ export class Live2DManager {
     if (idlePlayer && !idlePlayer.timer) {
       idlePlayer.start();
     }
+
+    // 6. 重新注册点击事件（Canvas 可能会被重新挂载）
+    this.registerCanvasClick();
   }
 
   /**
-   * 触发欢迎语
+   * 根据当前时间段显示对应的欢迎提示语
    */
-  private triggerWelcomeTips(config: Live2DConfig): void {
-    const tips = config.tips;
-    if (!tips || typeof tips !== 'object') return;
-    
-    const welcomeConfig = (tips as any).welcomeTips;
-    if (!welcomeConfig || !welcomeConfig.message) return;
+  private showWelcomeMessageByTime(): void {
+    if (!this.oml2d) return;
 
+    const period = this._getCurrentTimePeriod();
+    const welcomeTips = {
+      morning: "早安！新的一天开始了，要加油哦！",
+      afternoon: "午后好，喝杯茶休息一下吧。",
+      evening: "傍晚好，忙碌了一天辛苦了。",
+      night: "夜深了，早点休息，晚安。"
+    };
+
+    const message = welcomeTips[period];
+    this.setExpressionSafely('smile', message);
+  }
+
+  /**
+   * 根据当前小时数获取时间段标识
+   */
+  private _getCurrentTimePeriod(): 'morning' | 'afternoon' | 'evening' | 'night' {
     const hour = new Date().getHours();
-    let message = '';
-    const msgs = welcomeConfig.message as any;
+    if (hour >= 5 && hour < 12) return 'morning';
+    if (hour >= 12 && hour < 18) return 'afternoon';
+    if (hour >= 18 && hour < 22) return 'evening';
+    return 'night';
+  }
 
-    if (hour >= 5 && hour < 7) message = msgs.daybreak;
-    else if (hour >= 7 && hour < 11) message = msgs.morning;
-    else if (hour >= 11 && hour < 14) message = msgs.noon;
-    else if (hour >= 14 && hour < 17) message = msgs.afternoon;
-    else if (hour >= 17 && hour < 19) message = msgs.dusk;
-    else if (hour >= 19 && hour < 22) message = msgs.night;
-    else if (hour >= 22 || hour < 2) message = msgs.lateNight;
-    else message = msgs.weeHours;
-
-    if (message && this.oml2d?.tipsMessage) {
-      this.oml2d.tipsMessage(message, welcomeConfig.duration || 5000, welcomeConfig.priority || 3);
-    }
+  /**
+   * 从当前时间段的提示池中随机获取一条提示语
+   */
+  private _getRandomTipByTime(): string {
+    const period = this._getCurrentTimePeriod();
+    const pool = this.TIME_BASED_TIPS[period];
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   /**
@@ -392,6 +484,7 @@ export class Live2DManager {
         font-size: 24px !important; display: inline-block !important;
       }
       .oml2d-tips { transition: opacity 0.3s ease !important; }
+      #oml2d-stage, #oml2d-canvas { pointer-events: auto !important; }
     `;
     document.head.appendChild(style);
   }
