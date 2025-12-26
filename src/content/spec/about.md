@@ -1,48 +1,43 @@
+﻿---
+title: 关于
+description: 欢迎来到我的个人空间
+---
 
-This website is built with the **Astro** framework using the [Mizuki](https://github.com/matsuzaka-yuki/mizuki) theme.
+# 你好，我是 落叶Rakuyou 👋
 
-::github{repo="matsuzaka-yuki/Mizuki"}
+这里是我的个人自留地，用于记录那些在工作之外、属于我个人的技术探索与生活瞬间。
 
-## 🌟 Theme Features
+## 🎨 探索与热爱
 
-### 🎨 Design & User Experience
-- **Modern & Elegant Design** - Clean, minimalist interface with beautiful typography
-- **Fully Responsive** - Optimized for all devices from mobile to desktop
-- **Dark/Light Mode** - Automatic theme switching with smooth transitions
-- **Beautiful Typography** - Enhanced readability with JetBrains Mono font
-- **Smooth Animations** - Fluid page transitions and interactive elements
+### **计算机图形学**
+我对“如何构建世界”有着近乎偏执的兴趣。从最基础的渲染管线到复杂的光线追踪算法，我享受在代码中模拟光影流转的过程。
+- **研究方向**：Ray Tracing, OpenGL, WebGL/WebGPU, Shader 艺术。
+- **目标**：在浏览器中实现更具沉浸感的可视化体验。
 
-### 🔍 Content & Search
-- **Advanced Search** - Powered by [Pagefind](https://pagefind.app/) for fast, accurate results
-- **Enhanced Markdown** - Extended syntax with code highlighting and math support
-- **Interactive Table of Contents** - Auto-scroll navigation for long articles
-- **RSS Feed Generation** - Stay updated with automatic feed generation
-- **Reading Time Estimation** - Know how long articles take to read
-- **Post Categorization** - Organize content with tags and categories
+### **三维可视化与 GIS**
+除了底层的图形学，我也热衷于将地理空间数据转化为直观的视觉语言。Cesium 和 Three.js 是我最常用的画笔。
 
+## ☕ 生活碎片
 
+在代码之外，我也是一个热爱生活的人：
+- **ACG 爱好者**：喜欢追番、看漫画，偶尔也会在博客里分享一些观后感。
+- **记录者**：这个博客不仅是技术笔记，也是我生活点滴的存档点。
+- **极简主义**：追求简洁的代码和清爽的生活环境。
 
-### 📱 Special Pages
-- **Anime Tracking Page** - Track your anime watching progress with ratings
-- **Friends Links Page** - Showcase friend websites with beautiful cards
-- **Diary/Moments Page** - Share life moments like social media posts
-- **Archive Page** - Organized timeline view of all posts
-- **About Page** - Customizable personal introduction (this page!)
+## 📚 关于本站
 
-### 🛠 Technical Features
-- **Enhanced Code Blocks** - Powered by [Expressive Code](https://expressive-code.com/)
-- **Math Support** - LaTeX rendering with KaTeX for mathematical expressions
-- **Image Optimization** - PhotoSwipe gallery with lazy loading
-- **SEO Optimized** - Built-in sitemap and meta tags for better search visibility
-- **Performance Optimized** - Fast loading with caching and optimization
-- **Comment System Ready** - Integration support for Twikoo comments
+本站基于 [Astro](https://astro.build/) 框架与 [Mizuki](https://github.com/matsuzaka-yuki/mizuki) 主题构建。
+- **初衷**：建立一个完全属于自己的、不受算法干扰的表达空间。
+- **内容**：图形学笔记、算法心得、GIS 实战以及偶尔的碎碎念。
 
-### 🎯 Advanced Markdown Features
-- **Callouts & Admonitions** - Beautiful info boxes with `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`
-- **Mathematical Equations** - Write LaTeX math with `$inline$` and `$$block$$` syntax
-- **GitHub Cards** - Embed repository cards with `::github{repo="user/repo"}`
-- **Syntax Highlighting** - Advanced code highlighting with line numbers
-- **Copy Code Buttons** - Easy code copying functionality
+---
+
+> "Stay hungry, stay foolish." 
+
+如果你也对图形学、可视化或者生活本身感兴趣，欢迎与我交流：
+
+- **GitHub**: [SilverStr1ng](https://github.com/SilverStr1ng)
+- **Email**: [rakuyou63@gmail.com](mailto:rakuyou63@gmail.com)
 
 ---
 
