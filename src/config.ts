@@ -657,15 +657,23 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			duration: 5000,
 			priority: 2,
 			interval: 30000,
-			message: [
-				"要不要看看最新的文章？",
-				"喝口水休息下，再继续探索吧~",
-			],
+			message: {
+				weeHours: ["凌晨了，还在忙吗？", "夜深人静，适合思考呢。", "早点休息吧，明天还要继续。"],
+				daybreak: ["清晨的空气真好呢。", "天快亮了，你还没睡吗？"],
+				morning: ["今天也要元气满满哦！", "准备好开始一天的冒险了吗？", "早安，又是充满活力的一天。"],
+				noon: ["午饭时间到了，记得吃好点。", "休息一下，下午更有精神。"],
+				afternoon: ["午后的阳光暖洋洋的。", "要不要休息一下，喝杯下午茶？", "工作/学习之余也要记得活动下身体。"],
+				dusk: ["夕阳很美，准备吃晚餐了吗？", "天色暗下来了呢。"],
+				evening: ["忙碌了一天，辛苦啦。", "晚饭想吃什么好吃的？", "晚风拂面，感觉很舒服。"],
+				night: ["夜深了，世界都安静了。", "还不打算睡觉吗？熬夜很伤身的。", "晚安，愿你有个好梦。"],
+				lateNight: ["已经很晚了，快去睡觉吧。", "熬夜对身体不好哦，快去休息。"]
+			},
 		},
 		welcomeTips: {
 			duration: 3000,
 			priority: 3,
 			message: {
+				weeHours: "凌晨也在努力？记得照顾好身体~",
 				daybreak: "早起的努力最能看见希望呢。",
 				morning: "上午好！今天也一起加油吧~",
 				noon: "中午吃饱才有力气继续冒险。",
@@ -673,7 +681,6 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 				dusk: "傍晚了，别忘了伸伸腰。",
 				night: "晚上好，放松一下再继续看看内容？",
 				lateNight: "夜深了，注意休息别太晚哦。",
-				weeHours: "凌晨也在努力？记得照顾好身体~",
 			},
 		},
 		copyTips: {
@@ -711,6 +718,17 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 	},
 	custom: {
 		defaultExpression: "setWinter",
+		hitTips: {
+			weeHours: ["还在忙吗？注意保护眼睛。", "凌晨了，早点休息吧。"],
+			daybreak: ["晨曦微露，适合开始学习。", "早起记得喝杯温水哦。"],
+			morning: ["早安！又是充满活力的一天。", "今天也要加油哦！"],
+			noon: ["午饭吃了吗？", "休息一下吧。"],
+			afternoon: ["午后容易困倦，喝杯咖啡提提神吧。", "下午好，工作辛苦了。"],
+			dusk: ["夕阳很美，准备吃晚餐了吗？", "傍晚好。"],
+			evening: ["忙碌了一天，辛苦啦。", "晚风拂面，感觉很舒服。"],
+			night: ["夜深了，早点休息，晚安。", "熬夜对身体不好哦，快去睡觉吧。"],
+			lateNight: ["已经很晚了，快去睡觉吧。", "晚安，好梦。"]
+		},
 		expressions: [
 			{ name: "setReset", label: "默认", tip: "恢复初始状态" },
 			{ name: "setWinter", label: "冬服", tip: "穿上暖和的冬装" },

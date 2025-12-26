@@ -430,11 +430,12 @@ export type FullscreenWallpaperConfig = {
 export type Live2DConfig = Omit<OML2DOptions, "models"> & {
 	enable: boolean;
 	models: ModelOptions[];
-	tips?: TipsOptions | ((currentModel: ModelOptions, modelIndex: number) => TipsOptions);
+	tips?: any; // 允许更灵活的提示配置
 	statusBar?: StatusBarOptions;
 	menus?: MenusOptions | ((currentModel: ModelOptions, modelIndex: number) => MenusOptions);
 	custom?: {
 		defaultExpression?: string;
+		hitTips?: Record<string, string[]>; // 新增：点击提示语池
 		expressions?: Array<{
 			name: string;
 			label: string;

@@ -10,6 +10,7 @@ import type { Live2DConfig } from '../types/config';
 export class Live2DManager {
   private static instance: Live2DManager;
   private oml2d: any = null;
+  private config: Live2DConfig | null = null;
   private isInitialized = false;
   private isInitializing = false;
   private configSignature: string | null = null;
@@ -17,26 +18,6 @@ export class Live2DManager {
   private welcomeShown = false;
   private rootElement: HTMLElement | null = null;
   private currentExpressionIndex = -1;
-
-  /**
-   * 定义不同时间段的提示语池
-   */
-  private readonly TIME_BASED_TIPS = {
-    morning: ["早安！又是充满活力的一天。", "早起记得喝杯温水哦。", "晨曦微露，适合开始学习。"],
-    afternoon: ["午后容易困倦，喝杯咖啡提提神吧。", "下午好，工作辛苦了。", "阳光正好，出去走走吗？"],
-    evening: ["夕阳很美，准备吃晚餐了吗？", "忙碌了一天，辛苦啦。", "晚风拂面，感觉很舒服。"],
-    night: ["夜深了，早点休息，晚安。", "熬夜对身体不好哦，快去睡觉吧。", "还在忙吗？注意保护眼睛。"]
-  };
-
-  /**
-   * 闲置提示语池（Idle Tips）
-   */
-  private readonly IDLE_TIPS_POOLS = {
-    morning: ["清晨的空气真好呢。", "今天也要元气满满哦！", "准备好开始一天的冒险了吗？"],
-    afternoon: ["午后的阳光暖洋洋的。", "要不要休息一下，喝杯下午茶？", "工作/学习之余也要记得活动下身体。"],
-    evening: ["天色暗下来了呢。", "忙碌了一天，辛苦啦。", "晚饭想吃什么好吃的？"],
-    night: ["夜深了，世界都安静了。", "还不打算睡觉吗？熬夜很伤身的。", "晚安，愿你有个好梦。"]
-  };
 
   private constructor() {
     if (typeof window !== 'undefined') {
@@ -99,6 +80,7 @@ export class Live2DManager {
     console.log('[OML2D] Starting full initialization');
     this.isInitializing = true;
     (window as any).__OML2D_LOCK__ = true;
+    this.config = config;
 
     try {
       // 彻底清理旧的 DOM 节点，防止重复加载出现多个模型
@@ -156,8 +138,18 @@ export class Live2DManager {
     if (finalConfig.tips?.idleTips) {
       finalConfig.tips.idleTips.message = () => {
         const period = this._getCurrentTimePeriod();
-        const pool = this.IDLE_TIPS_POOLS[period];
-        return pool[Math.floor(Math.random() * pool.length)];
+        const messageSource = config.tips?.idleTips?.message;
+        
+        if (messageSource && typeof messageSource === 'object' && !Array.isArray(messageSource)) {
+          const pool = messageSource[period] || messageSource['morning'] || [];
+          return Array.isArray(pool) ? pool[Math.floor(Math.random() * pool.length)] : pool;
+        }
+        
+        // 回退到原始配置（如果是数组或字符串）
+        const originalPool = finalConfig.tips.idleTips.message;
+        return Array.isArray(originalPool) 
+          ? originalPool[Math.floor(Math.random() * originalPool.length)] 
+          : originalPool;
       };
     }
     
@@ -387,29 +379,32 @@ export class Live2DManager {
    * 根据当前时间段显示对应的欢迎提示语
    */
   private showWelcomeMessageByTime(): void {
-    if (!this.oml2d) return;
+    if (!this.oml2d || !this.config) return;
 
     const period = this._getCurrentTimePeriod();
-    const welcomeTips = {
-      morning: "早安！新的一天开始了，要加油哦！",
-      afternoon: "午后好，喝杯茶休息一下吧。",
-      evening: "傍晚好，忙碌了一天辛苦了。",
-      night: "夜深了，早点休息，晚安。"
-    };
+    const welcomeTips = this.config.tips?.welcomeTips?.message;
+    
+    let message = "欢迎来到我的博客！";
+    if (welcomeTips && typeof welcomeTips === 'object' && !Array.isArray(welcomeTips)) {
+      message = welcomeTips[period] || welcomeTips['morning'] || message;
+    }
 
-    const message = welcomeTips[period];
     this.setExpressionSafely('smile', message);
   }
 
   /**
    * 根据当前小时数获取时间段标识
    */
-  private _getCurrentTimePeriod(): 'morning' | 'afternoon' | 'evening' | 'night' {
+  private _getCurrentTimePeriod(): string {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'morning';
-    if (hour >= 12 && hour < 18) return 'afternoon';
-    if (hour >= 18 && hour < 22) return 'evening';
-    return 'night';
+    if (hour >= 0 && hour < 5) return 'weeHours';
+    if (hour >= 5 && hour < 7) return 'daybreak';
+    if (hour >= 7 && hour < 11) return 'morning';
+    if (hour >= 11 && hour < 13) return 'noon';
+    if (hour >= 13 && hour < 17) return 'afternoon';
+    if (hour >= 17 && hour < 19) return 'dusk';
+    if (hour >= 19 && hour < 21) return 'night';
+    return 'lateNight';
   }
 
   /**
@@ -417,8 +412,16 @@ export class Live2DManager {
    */
   private _getRandomTipByTime(): string {
     const period = this._getCurrentTimePeriod();
-    const pool = this.TIME_BASED_TIPS[period];
-    return pool[Math.floor(Math.random() * pool.length)];
+    const hitTips = this.config?.custom?.hitTips;
+    
+    if (hitTips && typeof hitTips === 'object') {
+      const pool = hitTips[period] || hitTips['morning'] || [];
+      if (Array.isArray(pool) && pool.length > 0) {
+        return pool[Math.floor(Math.random() * pool.length)];
+      }
+    }
+    
+    return "你好呀~";
   }
 
   /**
@@ -536,16 +539,14 @@ export class Live2DManager {
 
     // 复制提醒
     window.addEventListener('copy', () => {
-      const container = document.getElementById('live2d-container');
-      if (!container) return;
-      const config = JSON.parse(container.getAttribute('data-config') || '{}');
-      const copyTips = config.tips?.copyTips;
+      const copyTips = this.config?.tips?.copyTips;
 
-      if (copyTips && copyTips.enable && this.oml2d?.tips?.notification) {
-        this.oml2d.tips.notification(copyTips.message || '复制成功，引用请注明出处哦~', { 
-          duration: copyTips.duration || 3000, 
-          priority: copyTips.priority || 3 
-        });
+      if (copyTips && this.oml2d?.tips?.notification) {
+        const message = Array.isArray(copyTips.message) 
+          ? copyTips.message[Math.floor(Math.random() * copyTips.message.length)]
+          : (copyTips.message || '复制成功，引用请注明出处哦~');
+
+        this.oml2d.tips.notification(message, copyTips.duration || 3000, copyTips.priority || 3);
       }
     });
   }
