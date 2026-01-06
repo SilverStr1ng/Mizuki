@@ -411,7 +411,7 @@ export const shareConfig: ShareConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "Announcement", // 公告标题
-	content: "欢迎来到我的博客！我会分享一些关于计算机图形学、OpenGL 和图形编程的知识。", // 公告内容
+	content: "Those are pearls that were his eyes. Look!", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
