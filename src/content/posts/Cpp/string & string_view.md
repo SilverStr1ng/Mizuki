@@ -7,7 +7,7 @@ tags:
   - cpp
   - string
 draft: false
-category: ComputerGraphics
+category: C++
 created: 2025-12-23
 ---
 虽然 C 风格的字符串字面量可以使用，但 C 风格的字符串变量的行为有些奇怪，难以使用（例如，无法使用赋值来将 C 风格的字符串变量赋值给新的值），而且是危险的（例如，如果您将一个更大的 C 风格的字符串复制到分配给较短 C 风格的字符串的空间中，将会导致未定义的行为）。在现代 C++中，最好避免使用 C 风格的字符串变量。
@@ -256,7 +256,183 @@ Now enter your name: Alex
 Hello, Alex, you picked 2
 </pre>
 
-> [!BEST] `std::getLine()` 的最佳实践
+> [!SUCCESS] `std::getLine()` 的最佳实践
 > 如果使用 `std::getline()` 读取字符串，请使用 `std::cin >> std::ws` 输入操控符来忽略前导空白。这需要在每次调用 `std::getline()` 时进行，因为 `std::ws` 在调用之间不会被保留。
 
+## `std::string` 的长度
 
+如果我们想知道一个 `std::string` 中有多少个字符，我们可以询问一个 `std::string` 对象它的长度。这样做的语法与您之前见过的不同，但相当简单：
+```cpp
+#include <iostream>
+#include <string>
+
+int main()
+{
+    std::string name{ "Alex" };
+    std::cout << name << " has " << name.length() << " characters\n";
+
+    return 0;
+}
+```
+
+这将输出：
+<pre>
+Alex has 4 characters
+</pre>
+
+虽然 `std::string` 要求以空字符结束（从 C++11 开始），但返回的 `std::string` 的长度不包括隐式的空字符。
+
+请注意，我们不是通过 `length(name)` 来请求字符串长度，而是使用 `name.length()`。`length()` 函数并不是一个普通的独立函数——它是一种嵌套在 `std::string` 内部的特殊类型的函数，称为 _成员函数_ 。由于 `length()` 成员函数是在 `std::string` 内部声明的，因此在文档中有时会写作 `std::string::length()`。
+
+还要注意，`std::string::length()` 返回一个无符号整数值（很可能是 `size_t` 类型）。如果你想将长度赋值给一个 `int` 变量，你应该使用 `static_cast` 来避免编译器关于有符号/无符号转换的警告：
+
+```cpp
+int length { static_cast<int>(name.length()) };
+```
+
+## 初始化一个 `std::string` 是昂贵的
+
+每当初始化一个 `std::string` 时，都会创建一个用于初始化的字符串的副本。复制字符串是昂贵的，因此应注意尽量减少复制的次数。
+
+> [!SUCCESS] 关于 `std::string` 的最佳实践
+> 不要按值传递 `std::string`，因为这会产生昂贵的复制。
+
+## 返回一个 `std::string`
+
+当一个函数通过值返回给调用者时，返回值通常是从函数复制回调用者的。因此，你可能会认为不应该通过值返回 `std::string`，因为这样会返回一个昂贵的 `std::string` 副本。
+
+然而，作为一个经验法则，当返回语句的表达式解析为以下任意情况时，返回一个 `std::string` 通过值是可以的：
+- 类型为 `std::string` 的局部变量。
+- 一个从另一个函数调用或运算符返回的值的 `std::string`。
+- 一个作为返回语句一部分创建的 `std::string` 临时对象。
+
+在大多数其他情况下，最好避免按值返回 `std::string`，因为这样会导致昂贵的复制。
+
+> [!TIP] 如果要返回 C-Style string literal
+> 如果返回一个 C 风格的字符串字面量，请改用 `std::string_view` 返回类型。
+
+## `std::string` 的字面量
+
+双引号字符串字面量（如“Hello, world!”）默认是 C 风格字符串（因此，具有一种奇怪的类型）。
+
+我们可以通过在双引号字符串字面量后使用 `s` 后缀来创建类型为 `std::string` 的字符串字面量。`s` 必须是小写。
+```cpp
+#include <iostream>
+#include <string> // for std::string
+
+int main()
+{
+    using namespace std::string_literals; // easy access to the s suffix
+
+    std::cout << "foo\n";   // no suffix is a C-style string literal
+    std::cout << "goo\n"s;  // s suffix is a std::string literal
+
+    return 0;
+}
+```
+
+> [!NOTE] 关于 "s" 后缀
+> “s” 后缀位于命名空间 `std::literals::string_literals` 。
+> 访问字面量后缀的最简洁方法是使用指令 `using namespace std::literals`。然而，这会将 _所有_ 标准库字面量导入使用指令的作用域，这会引入一些你可能不会使用的内容。
+> 我们推荐 `using namespace std::string_literals` ，它仅导入 `std::string` 的字面量。
+
+## Constexpr strings
+
+如果你尝试定义一个 `constexpr std::string`，你的编译器可能会生成一个错误：
+```cpp
+#include <iostream>
+#include <string>
+
+int main()
+{
+    using namespace std::string_literals;
+
+    constexpr std::string name{ "Alex"s }; // compile error
+
+    std::cout << "My name is: " << name;
+
+    return 0;
+}
+```
+
+这是因为 `constexpr std::string` 在 C++17 或更早版本中根本不被支持，并且在 C++20/23 中仅在非常有限的情况下有效。如果您需要 constexpr 字符串，请改用 `std::string_view`。
+
+## `std:string_view` 介绍
+
+考虑以下程序：
+```cpp
+#include <iostream>
+
+int main()
+{
+    int x { 5 }; // x makes a copy of its initializer
+    std::cout << x << '\n';
+
+    return 0;
+}
+```
+
+当执行 `x` 的定义时，初始化值 `5` 被复制到为变量 `int x` 分配的内存中。对于基本类型，初始化和复制变量是快速的。
+
+现在考虑这个类似的程序：
+```cpp
+#include <iostream>
+#include <string>
+
+int main()
+{
+    std::string s{ "Hello, world!" }; // s makes a copy of its initializer
+    std::cout << s << '\n';
+
+    return 0;
+}
+```
+
+当 `s` 被初始化时，C 风格字符串字面量 `"Hello, world!"` 被复制到为 `std::string s` 分配的内存中。与基本类型不同，初始化和复制 `std::string` 是慢的。
+
+在上面的程序中，我们对 `s` 所做的只是将其值打印到控制台，然后 `s` 被销毁。我们基本上是复制了“Hello, world!”仅仅为了打印，然后销毁那份副本。这是低效的。
+
+在这个例子中我们看到类似的情况：
+```cpp
+#include <iostream>
+#include <string>
+
+void printString(std::string str) // str makes a copy of its initializer
+{
+    std::cout << str << '\n';
+}
+
+int main()
+{
+    std::string s{ "Hello, world!" }; // s makes a copy of its initializer
+    printString(s);
+
+    return 0;
+}
+```
+
+这个例子对 C 风格字符串“Hello, world!”进行了两次复制：一次是在 `main()` 中初始化 `s` 时，另一次是在 `printString()` 中初始化参数 `str` 时。仅仅为了打印一个字符串，这样的复制实在是太多了！
+
+## std:: string_view
+
+为了解决 `std::string` 初始化（或复制）成本高的问题，C++17 引入了 `std::string_view`（它位于 `<string_view>` 头文件中）。` std::string_view ` 提供对_现有_字符串（C 风格字符串、` std::string ` 或另一个 ` std::string_view `）的只读访问，而无需进行复制。 **只读**意味着我们可以访问和使用被查看的值，但不能修改它。
+
+以下示例与之前的示例相同，只是我们将 `std::string` 替换为 `std::string_view`。
+```cpp
+#include <iostream>
+#include <string_view> // C++17
+
+// str provides read-only access to whatever argument is passed in
+void printSV(std::string_view str) // now a std::string_view
+{
+    std::cout << str << '\n';
+}
+
+int main()
+{
+    std::string_view s{ "Hello, world!" }; // now a std::string_view
+    printSV(s);
+
+    return 0;
+}
+```
