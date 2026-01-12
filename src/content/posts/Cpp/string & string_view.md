@@ -1,6 +1,6 @@
 ---
 title: string & string_view
-description: Intro about the look-at Function.
+description: Intro to the std::string and std::string_view
 published: 2026-01-12
 pinned: false
 tags:
@@ -194,3 +194,69 @@ Enter your full name: John Doe
 Enter your favorite color: blue
 Your name is John Doe and your favorite color is blue
 </pre>
+## `std::ws` 到底是什么？
+
+C++支持输入操纵符，它们改变输入的接受方式。`std::ws` 输入操纵符告诉 `std::cin` 在提取之前忽略任何前导空白。前导空白是指在字符串开头出现的任何空白字符（空格、制表符、换行符）。
+
+让我们探讨一下这为什么有用。考虑以下程序：
+```cpp
+#include <iostream>
+#include <string>
+
+int main()
+{
+    std::cout << "Pick 1 or 2: ";
+    int choice{};
+    std::cin >> choice;
+
+    std::cout << "Now enter your name: ";
+    std::string name{};
+    std::getline(std::cin, name); // note: no std::ws here
+
+    std::cout << "Hello, " << name << ", you picked " << choice << '\n';
+
+    return 0;
+}
+```
+
+这是该程序的一些输出：
+<pre>
+Pick 1 or 2: 2
+Now enter your name: Hello, , you picked 2
+</pre>
+该程序首先会要求您输入 1 或 2，并等待您的输入。到目前为止一切正常。然后它会要求您输入您的名字。然而，它实际上并不会等待您输入名字！相反，它会打印“Hello”字符串，然后退出。
+
+当你使用 `operator>>` 输入一个值时，`std::cin` 不仅捕获该值，还捕获你按下回车键时出现的换行符（`'\n'`）。因此，当我们输入 `2` 并按下回车时，`std::cin` 将字符串 `"2\n"` 作为输入捕获。然后，它将值 `2` 提取到变量 `choice` 中，留下换行符以备后用。接着，当 `std::getline()` 去提取文本到 `name` 时，它发现 `"\n"` 已经在 `std::cin` 中等待，并认为我们之前输入了一个空字符串！这绝对不是我们想要的结果。
+
+我们可以修改上述程序，使用 `std::ws` 输入操控符，告诉 `std::getline()` 忽略任何前导空白字符：
+```cpp
+#include <iostream>
+#include <string>
+
+int main()
+{
+    std::cout << "Pick 1 or 2: ";
+    int choice{};
+    std::cin >> choice;
+
+    std::cout << "Now enter your name: ";
+    std::string name{};
+    std::getline(std::cin >> std::ws, name); // note: added std::ws here
+
+    std::cout << "Hello, " << name << ", you picked " << choice << '\n';
+
+    return 0;
+}
+```
+
+现在这个程序将按预期运行:
+<pre>
+Pick 1 or 2: 2
+Now enter your name: Alex
+Hello, Alex, you picked 2
+</pre>
+
+> [!BEST] `std::getLine()` 的最佳实践
+> 如果使用 `std::getline()` 读取字符串，请使用 `std::cin >> std::ws` 输入操控符来忽略前导空白。这需要在每次调用 `std::getline()` 时进行，因为 `std::ws` 在调用之间不会被保留。
+
+
