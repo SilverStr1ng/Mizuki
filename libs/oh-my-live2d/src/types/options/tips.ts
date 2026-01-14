@@ -126,7 +126,7 @@ export interface TipsOptions {
       /**
        * 早上 8-11 点提示信息内容
        *
-       * @default "上午好！工作顺利嘛，不要久坐，多起来走动走动哦！"
+       * @default "上午好！工作顺利吗，不要久坐，多起来走动走动哦！"
        */
       morning?: string;
 
