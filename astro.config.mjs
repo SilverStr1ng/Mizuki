@@ -19,6 +19,7 @@ import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-cop
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
 import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
 import { remarkAdmonitions } from "./src/plugins/remark-admonitions.mjs";
+import { remarkHighlight } from "./src/plugins/remark-highlight.mjs";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { rehypeMermaid } from "./src/plugins/rehype-mermaid.mjs";
 import { rehypeWrapTable } from "./src/plugins/rehype-wrap-table.mjs";
@@ -121,6 +122,7 @@ export default defineConfig({
 			remarkReadingTime,
 			remarkExcerpt,
 			remarkAdmonitions,
+			remarkHighlight,
 			remarkDirective,
 			remarkSectionize,
 			parseDirectiveNode,
