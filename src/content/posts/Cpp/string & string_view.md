@@ -53,7 +53,7 @@ std::string myID{ "45" }; // "45" is not the same as integer 45!
 
 在字符串形式中，数字被视为文本而不是数字，因此不能像数字一样进行操作（例如，你不能将其乘以数字）。C++不会自动将字符串转换为整数或浮点值，或者反之亦然（尽管我们将在未来介绍一些方法）。
 
-## 使用 `std::cout` 输出字符串
+### 使用 `std::cout` 输出字符串
 
 使用 `std::cout` 可以按预期输出 `std::string` 对象。
 
@@ -95,7 +95,7 @@ int main()
 []
 </pre>
 
-## `std::string` 可以处理不同长度的字符串
+### `std::string` 可以处理不同长度的字符串
 
 `std::string` 最令人称道的一项功能是能够存储不同长度的字符串：
 
@@ -128,7 +128,7 @@ Jay
 
 这就是 `std::string` 如此强大的原因之一。
 
-## 使用 `std::cin` 的字符串输入
+### 使用 `std::cin` 的字符串输入
 
 将 `std::string` 与 `std::cin` 结合使用可能会带来一些惊喜！请考虑以下示例：
 
@@ -162,7 +162,7 @@ Enter your favorite color: Your name is John and your favorite color is Doe
 
 因此，当我们使用 `operator>>` 将输入提取到变量 `name` 时，只提取了 `"John"`，而 `" Doe"` 留在 `std::cin` 中。当我们随后使用 `operator>>` 提取输入到变量 `color` 时，它提取了 `"Doe"`，而不是等待我们输入颜色。然后程序结束。
 
-## 使用 `std::getline()` 输入文本
+### 使用 `std::getline()` 输入文本
 
 要将完整的一行输入读取到字符串中，最好使用 `std::getline()` 函数。`std::getline()` 需要两个参数：第一个是 `std::cin`，第二个是你的字符串变量。
 
@@ -194,7 +194,7 @@ Enter your full name: John Doe
 Enter your favorite color: blue
 Your name is John Doe and your favorite color is blue
 </pre>
-## `std::ws` 到底是什么？
+### `std::ws` 到底是什么？
 
 C++支持输入操纵符，它们改变输入的接受方式。`std::ws` 输入操纵符告诉 `std::cin` 在提取之前忽略任何前导空白。前导空白是指在字符串开头出现的任何空白字符（空格、制表符、换行符）。
 
@@ -256,10 +256,10 @@ Now enter your name: Alex
 Hello, Alex, you picked 2
 </pre>
 
-> [!SUCCESS] std::getLine() 的最佳实践
+> [!SUCCESS] 最佳实践
 > 如果使用 `std::getline()` 读取字符串，请使用 `std::cin >> std::ws` 输入操控符来忽略前导空白。这需要在每次调用 `std::getline()` 时进行，因为 `std::ws` 在调用之间不会被保留。
 
-## `std::string` 的长度
+### `std::string` 的长度
 
 如果我们想知道一个 `std::string` 中有多少个字符，我们可以询问一个 `std::string` 对象它的长度。这样做的语法与您之前见过的不同，但相当简单：
 ```cpp
@@ -290,14 +290,14 @@ Alex has 4 characters
 int length { static_cast<int>(name.length()) };
 ```
 
-## 初始化一个 `std::string` 是昂贵的
+### 初始化一个 `std::string` 是昂贵的
 
 每当初始化一个 `std::string` 时，都会创建一个用于初始化的字符串的副本。复制字符串是昂贵的，因此应注意尽量减少复制的次数。
 
-> [!SUCCESS] 关于 `std::string` 的最佳实践
+> [!SUCCESS] 最佳实践
 > 不要按值传递 `std::string`，因为这会产生昂贵的复制。
 
-## 返回一个 `std::string`
+### 返回一个 `std::string`
 
 当一个函数通过值返回给调用者时，返回值通常是从函数复制回调用者的。因此，你可能会认为不应该通过值返回 `std::string`，因为这样会返回一个昂贵的 `std::string` 副本。
 
@@ -311,7 +311,7 @@ int length { static_cast<int>(name.length()) };
 > [!TIP] 如果要返回 C-Style string literal
 > 如果返回一个 C 风格的字符串字面量，请改用 `std::string_view` 返回类型。
 
-## `std::string` 的字面量
+### `std::string` 的字面量
 
 双引号字符串字面量（如“Hello, world!”）默认是 C 风格字符串（因此，具有一种奇怪的类型）。
 
@@ -336,7 +336,7 @@ int main()
 > 访问字面量后缀的最简洁方法是使用指令 `using namespace std::literals`。然而，这会将 _所有_ 标准库字面量导入使用指令的作用域，这会引入一些你可能不会使用的内容。
 > 我们推荐 `using namespace std::string_literals` ，它仅导入 `std::string` 的字面量。
 
-## Constexpr strings
+### Constexpr strings
 
 如果你尝试定义一个 `constexpr std::string`，你的编译器可能会生成一个错误：
 ```cpp
@@ -357,7 +357,9 @@ int main()
 
 这是因为 `constexpr std::string` 在 C++17 或更早版本中根本不被支持，并且在 C++20/23 中仅在非常有限的情况下有效。如果您需要 constexpr 字符串，请改用 `std::string_view`。
 
-## `std:string_view` 介绍
+## `std::string_view`
+
+### `std:string_view` 介绍
 
 考虑以下程序：
 ```cpp
@@ -413,9 +415,9 @@ int main()
 
 这个例子对 C 风格字符串“Hello, world!”进行了两次复制：一次是在 `main()` 中初始化 `s` 时，另一次是在 `printString()` 中初始化参数 `str` 时。仅仅为了输出一个字符串，这样的复制实在是太多了！
 
-## std:: string_view ==C++17==
+### std:: string_view ==C++17==
 
-为了解决 `std::string` 初始化（或复制）成本高的问题，C++17 引入了 `std::string_view`（它位于 `<string_view>` 头文件中）。` std::string_view ` 提供对_现有_字符串（C 风格字符串、` std::string ` 或另一个 ` std::string_view `）的只读访问，而无需进行复制。 **只读**意味着我们可以访问和使用被查看的值，但不能修改它。
+为了解决 `std::string` 初始化（或复制）成本高的问题，C++17 引入了 `std::string_view`（它位于 `<string_view>` 头文件中）。` std::string_view ` 提供对*现有*字符串（C 风格字符串、` std::string ` 或另一个 ` std::string_view `）的只读访问，而无需进行复制。 **只读**意味着我们可以访问和使用被查看的值，但不能修改它。
 
 以下示例与之前的示例相同，只是我们将 `std::string` 替换为 `std::string_view`。
 ```cpp
@@ -441,10 +443,10 @@ int main()
 
 当我们用 C 风格字符串字面量 `"Hello, world!"` 初始化 `std::string_view s` 时，`s` 提供对“Hello, world!”的只读访问，而无需复制字符串。当我们将 `s` 传递给 `printSV()` 时，参数 `str` 是从 `s` 初始化的。这使我们能够通过 `str` 访问“Hello, world!” ，同样无需复制字符串。
 
-> [!SUCCESS] 只读字符串的最佳实践
+> [!SUCCESS] 最佳实践
 > 在需要只读字符串时，优先使用 `std::string_view` 而不是 `std::string`，特别是在函数参数中。
 
-## `std::string_view` 可以用多种不同类型的字符串进行初始化。
+### `std::string_view` 可以用多种不同类型的字符串进行初始化。
 
 `std::string_view` 的一个有趣之处在于它的灵活性。`std::string_view` 对象可以用 C 风格字符串、`std::string` 或另一个 `std::string_view` 进行初始化：
 ```cpp
@@ -468,7 +470,7 @@ int main()
 }
 ```
 
-## `std::string_view` 参数将接受多种不同类型的字符串参数
+### `std::string_view` 参数将接受多种不同类型的字符串参数
 
 C 风格字符串和 `std::string` 都会隐式转换为 `std::string_view`。因此，`std::string_view` 参数将接受 C 风格字符串、`std::string` 或 `std::string_view` 类型的参数：
 ```cpp
@@ -495,7 +497,7 @@ int main()
 }
 ```
 
-## `std::string_view` 不会隐式转换为 `std::string`
+### `std::string_view` 不会隐式转换为 `std::string`
 
 因为 `std::string` 会复制其初始化器（这很耗费资源），C++ 不允许将 `std::string_view` 隐式转换为 `std::string`。这样做是为了防止意外将 `std::string_view` 参数传递给 `std::string` 参数，从而不必要地进行昂贵的复制。
 
@@ -529,7 +531,7 @@ int main()
 }
 ```
 
-## 赋值会改变 `std::string_view` 所查看的内容
+### 赋值会改变 `std::string_view` 所查看的内容
 
 将一个新字符串赋值给 `std::string_view` 会使 `std::string_view` 查看新字符串。它不会以任何方式修改先前查看的字符串。
 
@@ -556,7 +558,7 @@ int main()
 
 在上述示例中，`sv = "John"` 使得 `sv` 现在查看字符串 `"John"`。它并不改变 `name` 持有的值（仍然是 `"Alex"`）。
 
-## `std::string_view` 的字面量
+### `std::string_view` 的字面量
 
 双引号字符串字面量默认是 C 风格字符串字面量。我们可以通过在双引号字符串字面量后使用 `sv` 后缀来创建类型为 `std::string_view` 的字符串字面量。`sv` 必须是小写。
 ```cpp
@@ -581,7 +583,7 @@ int main()
 
 也就是说，使用 `std::string_view` 字面量初始化 `std::string_view` 不会导致问题（因为这些字面量实际上是伪装的 C 风格字符串字面量）。
 
-## constexpr `std::string_view`
+### constexpr `std::string_view`
 
 与 `std::string` 不同，`std::string_view` 完全支持 constexpr：
 ```cpp
@@ -599,11 +601,11 @@ int main()
 
 这使得 `constexpr std::string_view` 成为需要字符串符号常量时的首选。
 
-## 视图类型
+### 视图类型
 
 由于 `std::string_view` 是我们第一次接触视图类型，我们将花一些额外的时间进一步讨论它。我们将重点介绍如何安全地使用 `std::string_view`，并提供一些示例说明它如何被错误使用。最后，我们将总结一些关于何时使用 `std::string` 与 `std::string_view` 的指导原则。
 
-## An introduction to owners and viewers
+### An introduction to owners and viewers
 
 让我们暂时转到一个类比上。假设你决定要画一幅自行车的画。但你没有自行车！你该怎么办？
 
@@ -615,7 +617,7 @@ int main()
 
 观看是便宜的。作为一个观众，你对你所观看的对象没有责任，但你也无法控制这些对象。
 
-## `std::string` 是一个（唯一的）拥有者
+### `std::string` 是一个（唯一的）拥有者
 
 你可能会想知道为什么 `std::string` 会对其初始化器进行昂贵的复制。当一个对象被实例化时，会为该对象分配内存，以存储它在整个生命周期中需要使用的任何数据。这块内存是为对象保留的，并且在对象存在的期间内保证存在。这是一个安全的空间。`std::string`（以及大多数其他对象）将它们所给的初始化值复制到这块内存中，以便它们可以拥有自己的独立值，以便后续访问和操作。一旦初始化值被复制，对象就不再依赖于初始化器。
 
@@ -630,7 +632,7 @@ int main()
 > [!NOTE] 关于所有者的见解
 > 在编程中，当我们称一个对象为所有者时，通常意味着它是唯一的所有者（除非另有说明）。唯一所有权（也称为单一所有权）确保明确谁对该数据负责。
 
-## 我们并不总是需要复制
+### 我们并不总是需要复制
 
 让我们回顾一下这个例子：
 ```cpp
@@ -660,7 +662,7 @@ int main()
 
 由于这三个条件都为假，因此使用 `s` 所持有的字符串而不是进行复制是没有风险的。并且由于字符串复制的成本很高，为什么要为一个我们不需要的复制付费呢？
 
-## `std::string_view` 是一个查看器
+### `std::string_view` 是一个查看器
 
 `std::string_view` 采用不同的初始化方法。它不是对初始化字符串进行昂贵的复制，而是创建一个对初始化字符串的廉价视图。然后可以在需要访问字符串时使用 `std::string_view`。
 
@@ -672,7 +674,7 @@ int main()
 
 一个正在查看已被销毁字符串的 `std::string_view` 有时被称为<font color="#4dfe50">悬空</font>(**dangling**)视图。
 
-## `std::string_view` 最好用作只读函数参数
+### `std::string_view` 最好用作只读函数参数
 
 `std::string_view` 的最佳用法是作为只读函数参数。这允许我们传入 C 风格字符串、`std::string` 或 `std::string_view` 参数，而无需进行复制，因为 `std::string_view` 将创建对参数的视图。
 ```cpp
@@ -701,7 +703,7 @@ int main()
 
 因为 `str` 函数参数在控制返回给调用者之前被创建、初始化、使用和销毁，所以没有风险会导致被查看的字符串（函数参数）在我们的 `str` 参数之前被修改或销毁。
 
-## 不当使用 `std::string_view`
+### 不当使用 `std::string_view`
 
 让我们来看几个错误使用 `std::string_view` 导致问题的案例。
 
@@ -795,7 +797,7 @@ int main()
 
 在这个例子中，`sv` 再次被设置为查看 `s`。然后对 `s` 进行了修改。当 `std::string` 被修改时，任何对该 `std::string` 的视图都可能会被**失效** ，这意味着这些视图现在是无效或不正确的。使用失效的视图将导致未定义行为。
 
-## 重新验证一个无效的 `std::string_view`
+### 重新验证一个无效的 `std::string_view`
 
 无效的对象通常可以通过将其设置回已知的良好状态来重新验证（再次有效）。对于无效的 `std::string_view`，我们可以通过为无效的 `std::string_view` 对象分配一个有效的字符串来实现这一点。
 
@@ -822,7 +824,7 @@ int main()
 
 在 `sv` 因 `s` 的修改而失效后，我们通过语句 `sv = s` 重新验证 `sv`，这使得 `sv` 再次成为 `s` 的有效视图。当我们第二次打印 `sv` 时，它输出“Hello, universe!”。
 
-## 小心返回 `std::string_view`
+### 小心返回 `std::string_view`
 
 `std::string_view` 可以用作函数的返回值。然而，这通常是危险的。
 
