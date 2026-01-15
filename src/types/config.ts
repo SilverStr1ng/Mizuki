@@ -427,7 +427,7 @@ export type FullscreenWallpaperConfig = {
 /**
  * Live2D 看板娘配置（基于 oh-my-live2d）
  */
-export type Live2DConfig = Omit<OML2DOptions, "models"> & {
+export type Live2DConfig = Omit<OML2DOptions, "models" | "tips" | "statusBar" | "menus"> & {
 	enable: boolean;
 	models: ModelOptions[];
 	tips?: any; // 允许更灵活的提示配置

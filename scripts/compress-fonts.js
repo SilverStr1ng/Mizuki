@@ -131,16 +131,12 @@ function extractText(content, ext) {
 		// 移除 frontmatter 后继续处理正文
 		text = text.replace(/^---[\s\S]*?---\s*/m, "");
 
-		// 移除代码块中的内容（通常不需要特殊字体）
-		text = text.replace(/```[\s\S]*?```/g, "");
-		text = text.replace(/`[^`]+`/g, "");
+		// 移除 HTML 标签
+		text = text.replace(/<[^>]*>/g, " ");
+
+		// 移除 Markdown 语法（保留内容）
+		text = text.replace(/[#*_~`[\]()]/g, " ");
 	}
-
-	// 移除 HTML 标签
-	text = text.replace(/<[^>]*>/g, " ");
-
-	// 移除 Markdown 语法
-	text = text.replace(/[#*_~`[\]()]/g, " ");
 
 	// 移除 URL
 	text = text.replace(/https?:\/\/[^\s]+/g, "");
@@ -564,63 +560,94 @@ async function collectText() {
 
 	const textSet = new Set();
 
-	// 1. 读取 src/data 目录
-	const dataDir = path.join(__dirname, "../src/data");
-	const dataFiles = readFilesRecursively(dataDir);
+	// 1. 读取 src/data, src/components, src/pages, src/layouts, src/utils 目录
+	const dirs = [
+		path.join(__dirname, "../src/data"),
+		path.join(__dirname, "../src/components"),
+		path.join(__dirname, "../src/pages"),
+		path.join(__dirname, "../src/layouts"),
+		path.join(__dirname, "../src/utils"),
+	];
 
-	dataFiles.forEach((file) => {
-		if (file.endsWith(".ts") || file.endsWith(".js")) {
-			const content = fs.readFileSync(file, "utf-8");
+	dirs.forEach((dir) => {
+		if (fs.existsSync(dir)) {
+			const files = readFilesRecursively(dir);
 
-			// 改进的字符串匹配
-			const patterns = [
-				// 双引号字符串
-				/"([^"\\]|\\.|\\n|\\t)*"/g,
-				// 单引号字符串
-				/'([^'\\]|\\.|\\n|\\t)*'/g,
-				// 模板字符串
-				/`([^`\\]|\\.|\\n|\\t)*`/g,
-			];
+			files.forEach((file) => {
+				if (
+					file.endsWith(".ts") ||
+					file.endsWith(".js") ||
+					file.endsWith(".astro") ||
+					file.endsWith(".svelte") ||
+					file.endsWith(".vue")
+				) {
+					const content = fs.readFileSync(file, "utf-8");
 
-			patterns.forEach((pattern) => {
-				const matches = content.match(pattern);
-				if (matches) {
-					matches.forEach((match) => {
-						let text = match;
+					// 改进的字符串匹配
+					const patterns = [
+						// 双引号字符串
+						/"([^"\\]|\\.|\\n|\\t)*"/g,
+						// 单引号字符串
+						/'([^'\\]|\\.|\\n|\\t)*'/g,
+						// 模板字符串
+						/`([^`\\]|\\.|\\n|\\t)*`/g,
+					];
 
-						// 清理引号
-						if (
-							(text.startsWith('"') && text.endsWith('"')) ||
-							(text.startsWith("'") && text.endsWith("'")) ||
-							(text.startsWith("`") && text.endsWith("`"))
-						) {
-							text = text.slice(1, -1);
-						}
+					patterns.forEach((pattern) => {
+						const matches = content.match(pattern);
+						if (matches) {
+							matches.forEach((match) => {
+								let text = match;
 
-						// 处理转义字符
-						text = text
-							.replace(/\\n/g, "\n")
-							.replace(/\\t/g, "\t")
-							.replace(/\\"/g, '"')
-							.replace(/\\'/g, "'");
+								// 清理引号
+								if (
+									(text.startsWith('"') && text.endsWith('"')) ||
+									(text.startsWith("'") && text.endsWith("'")) ||
+									(text.startsWith("`") && text.endsWith("`"))
+								) {
+									text = text.slice(1, -1);
+								}
 
-						for (const char of text) {
-							textSet.add(char);
+								// 处理转义字符
+								text = text
+									.replace(/\\n/g, "\n")
+									.replace(/\\t/g, "\t")
+									.replace(/\\"/g, '"')
+									.replace(/\\'/g, "'");
+
+								for (const char of text) {
+									textSet.add(char);
+								}
+							});
 						}
 					});
+
+					// 针对 Astro 文件的补充：提取正文中的文本（非字符串部分）
+					if (file.endsWith(".astro") || file.endsWith(".svelte")) {
+						// 简单的标签内容匹配
+						const tagContentMatches = content.match(/>([^<>{}\n]+)</g);
+						if (tagContentMatches) {
+							tagContentMatches.forEach((match) => {
+								const text = match.slice(1, -1).trim();
+								for (const char of text) {
+									textSet.add(char);
+								}
+							});
+						}
+					}
+
+					// 简单正则作为补充
+					const stringMatches = content.match(/["'`]([^"'`]+)["'`]/g);
+					if (stringMatches) {
+						stringMatches.forEach((match) => {
+							const text = match.slice(1, -1);
+							for (const char of text) {
+								textSet.add(char);
+							}
+						});
+					}
 				}
 			});
-
-			// 简单正则作为补充
-			const stringMatches = content.match(/["'`]([^"'`]+)["'`]/g);
-			if (stringMatches) {
-				stringMatches.forEach((match) => {
-					const text = match.slice(1, -1);
-					for (const char of text) {
-						textSet.add(char);
-					}
-				});
-			}
 		}
 	});
 
@@ -759,29 +786,24 @@ async function collectText() {
 			if ([".md", ".mdx", ".ts", ".js"].includes(ext)) {
 				const content = fs.readFileSync(file, "utf-8");
 				const text = extractText(content, ext);
+				// 收集所有字符，不再使用限制性的 CJK 过滤器，以确保博客内容中的英文等字符也能正确显示
 				for (const char of text) {
-					// 只保留中文、日文、韩文等 CJK 字符和常用标点
-					if (
-						char.match(
-							/[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af\u3000-\u303f\uff00-\uffef]/,
-						)
-					) {
-						textSet.add(char);
-					}
+					textSet.add(char);
 				}
 			}
 		});
 	}
 
-	// 添加常用标点符号和数字
-	const commonChars = "0123456789，。！？；：\"\"''（）【】《》、·—…「」『』";
-	for (const char of commonChars) {
+	// 5. 补充基础字符集
+	// 添加所有 ASCII 字符，防止部分英文字符回退到系统字体导致排版不统一
+	const asciiText = getAsciiCharset();
+	for (const char of asciiText) {
 		textSet.add(char);
 	}
 
-	// 添加英文字母（如果字体支持）
-	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	for (const char of alphabet) {
+	// 添加常用标点符号和数字
+	const commonChars = "0123456789，。！？；：\"\"''（）【】《》、·—…「」『』";
+	for (const char of commonChars) {
 		textSet.add(char);
 	}
 
