@@ -266,7 +266,7 @@ export class StatusBar {
     if (isNumber(delay)) {
       this.timer = setTimeout(() => {
         void this.slideOut();
-      }, delay + this.statusBarOptions.transitionTime);
+      }, delay + this.statusBarOptions.transitionTime) as unknown as number;
     }
   }
 

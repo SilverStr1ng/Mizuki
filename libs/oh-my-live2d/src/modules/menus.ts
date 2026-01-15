@@ -126,7 +126,7 @@ export class Menus {
         this.setStyle({ opacity: 1, visibility: 'visible' });
         timer = setTimeout(() => {
           this.setStyle({ opacity: 0, visibility: 'hidden' });
-        }, 3000);
+        }, 3000) as unknown as number;
       };
     }
   }
