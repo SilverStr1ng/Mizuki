@@ -113,6 +113,13 @@ document.addEventListener("click", function (e: MouseEvent) {
         };
         
         copyToClipboard(code).then(() => {
+            // 触发全局 copy 事件，让 oh-my-live2d 的复制提示生效
+            try {
+                document.dispatchEvent(new Event('copy'));
+            } catch (eventErr) {
+                console.warn('触发 copy 事件失败:', eventErr);
+            }
+
             const timeoutId = target.getAttribute("data-timeout-id");
             if (timeoutId) {
                 clearTimeout(parseInt(timeoutId));
