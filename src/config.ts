@@ -654,9 +654,9 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 			padding: "16px 20px",
 		},
 		idleTips: {
-			duration: 5000,
+			duration: 3000,
 			priority: 2,
-			interval: 60000,
+			interval: 600000,
 			message: {
 				weeHours: ["凌晨了，还在忙吗？", "夜深人静，适合思考呢。", "早点休息吧，明天还要继续。"],
 				daybreak: ["清晨的空气真好呢。", "天快亮了，你还没睡吗？"],
