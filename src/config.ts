@@ -323,7 +323,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
 	name: "落叶Rakuyou",
-	bio: "Desires are already memories.",
+	bio: "现在，你看，你需要用尽全力才能保持原地。如果你想去别的地方，你必须跑得至少比现在快一倍!",
 	typewriter: {
 		enable: true, // 启用个人简介打字机效果
 		speed: 80, // 打字速度（毫秒）
