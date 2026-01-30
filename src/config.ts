@@ -706,7 +706,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 	},
 	statusBar: {
 		disable: false,
-		restMessage: "猫猫休息中，戳我唤醒~",
+		restMessage: "休息中，戳我唤醒~",
 		switchingMessage: "正在换个新姿势...",
 		style: {
 			backgroundColor: "rgba(13, 20, 32, 0.86)",
