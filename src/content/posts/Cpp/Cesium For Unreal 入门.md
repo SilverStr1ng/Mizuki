@@ -48,7 +48,7 @@ created: 2026-01-29
 
 ![图7：添加 Cesium SunSky](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130092843.png)
 
-![图8：视口效果](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130092910.png)
+![图8：视口效果](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_09-29-10.png)
 
 > [!TIP] 解决视口纯白的问题
 > 在添加了 Cesium SunSky 之后，你的视口是否变成了纯白色并且保持这种状态？CesiumSunSky 使用的是逼真的光照强度值，这比标准 Unreal 项目要亮得多。因此，在某些项目设置下，光线会使场景失真并使其呈现白色。要解决这个问题，请在**默认设置**设置选项中启用**自动曝光**和**拓展自动曝光中的默认亮度范围**。你可以通过前往**编辑** -> **项目设置**，然后导航到**引擎** -> **渲染**，并向下滚动到**默认设置**部分来找到这些选项。
@@ -85,7 +85,7 @@ created: 2026-01-29
 
 地形将出现在关卡中。
 
-![图15：地形显示](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130102814.png)
+![图15：地形显示](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-28-14.png)
 
 
 2. 查看右侧的**大纲**。除了你之前添加的 CesiumSunSky 之外，你还会看到各种 Cesium 角色。其中之一，Cesium World Terrain，就是你刚刚创建的瓦片集。另外三个——CesiumCameraManager、CesiumCreditSystemBP 和 CesiumGeoreference——是在你第一次向关卡中添加 3D 瓦片集或地理参考角色时自动创建的。
@@ -114,11 +114,11 @@ Origin Height = 1000.0
 
 输入这些坐标后，您会发现场景已经切换到这个新位置。
 
-![图18：芝加哥场景](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130103242.png)
+![图18：芝加哥场景](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-32-42.png)
 4. 城市看起来非常平坦。Cesium World Terrain 不包含建筑细节。幸运的是，**Cesium OSM Buildings** 可以提供帮助。
    从 **Cesium Quick Add** 面板中，将 **Cesium OSM Buildings**添加到关卡中。
    
-   ![图19：添加 OSM Buildings](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130103407.png)
+   ![图19：添加 OSM Buildings](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-34-07.png)
 
 接着，您就可以开始探索关卡。在视口右上角将摄像机速度修改为 32，然后按住鼠标右键，可以通过 WASD 来移动。
 
@@ -130,11 +130,11 @@ Origin Height = 1000.0
 
 在内容浏览器面板中，找到左侧 CesiumForUnreal 菜单下的 Materials 文件夹，右键点击 M_CesiumBaseMaterial 材质，选择**复制**，并重命名为 M_CyberpunkCity:
 
-![图20：复制材质](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130104350.png)
+![图20：复制材质](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-43-50.png)
 
 双击进入这个材质的编辑面板，点击 M_CyberpunkCity 节点，取消勾选**使用材质属性**：
 
-![图21：取消使用材质属性](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130104625.png)
+![图21：取消使用材质属性](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-46-25.png)
 
 然后选中 Material Attribute Layers 节点，按下 **Del** 键删除。
 
@@ -143,10 +143,10 @@ Origin Height = 1000.0
 2. 不出意外，这会变出一个颜色节点（Constant3Vector）
 3. 选中它，并且在左侧的**细节**面板的**常量**右侧的颜色选择框选中一个明亮的青蓝色 (00E5FF)。
 
-![图22：选择颜色](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130105050.png)
+![图22：选择颜色](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-50-50.png)
 将颜色节点右侧的链接符号连到 M_CyberpunkCity 的基础颜色和自发光颜色：
 
-![图23：连接颜色节点](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130105242.png)
+![图23：连接颜色节点](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-52-42.png)
 
 点击左上角的应用和保存。
 
@@ -154,7 +154,7 @@ Origin Height = 1000.0
 
 然后我们可以看到视口中的建筑模型的颜色变成了我们刚才设置的荧光青绿。
 
-![图24：建筑颜色变化](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/20260130105812.png)
+![图24：建筑颜色变化](https://raw.githubusercontent.com/SilverStr1ng/Images/master/Images/PixPin_2026-01-30_10-58-12.png)
 
 呃，老实说，这一点也不 cool，甚至可以说非常无聊，但幸运的是，我们可以做得更好。
 
