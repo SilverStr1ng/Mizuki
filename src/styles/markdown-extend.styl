@@ -1,6 +1,13 @@
 .custom-md
 
   blockquote.admonition
+    --admonition-accent: var(--admonitions-color-note)
+    background: linear-gradient(180deg, color-mix(var(--admonition-accent) 40%, transparent), color-mix(var(--admonition-accent) 15%, transparent))
+    background-color: color-mix(var(--admonition-accent) 32%, var(--card-bg) 68%)
+    border: 1px solid color-mix(var(--admonition-accent) 60%, transparent)
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.1)
+    backdrop-filter: blur(16px) saturate(1.5)
+    -webkit-backdrop-filter: blur(16px) saturate(1.5)
     .bdm-title
       display: flex
       align-items: center
@@ -20,6 +27,10 @@
         mask-position: center
         mask-repeat: no-repeat
     &.bdm-note
+      --admonition-accent: var(--admonitions-color-note)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-note) 70%, black(0.45)), color-mix(var(--admonitions-color-note) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-note) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-note) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-note)
 
@@ -30,6 +41,10 @@
       &:before
         background: var(--admonitions-color-note)
     &.bdm-info
+      --admonition-accent: var(--admonitions-color-info)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-info) 70%, black(0.45)), color-mix(var(--admonitions-color-info) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-info) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-info) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-info)
 
@@ -40,6 +55,10 @@
       &:before
         background: var(--admonitions-color-info)
     &.bdm-success
+      --admonition-accent: var(--admonitions-color-success)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-success) 70%, black(0.45)), color-mix(var(--admonitions-color-success) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-success) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-success) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-success)
 
@@ -50,6 +69,10 @@
       &:before
         background: var(--admonitions-color-success)
     &.bdm-warning
+      --admonition-accent: var(--admonitions-color-warning)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-warning) 70%, black(0.45)), color-mix(var(--admonitions-color-warning) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-warning) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-warning) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-warning)
 
@@ -60,16 +83,24 @@
       &:before
         background: var(--admonitions-color-warning)
     &.bdm-danger
+      --admonition-accent: var(--admonitions-color-danger)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-danger) 70%, black(0.45)), color-mix(var(--admonitions-color-danger) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-danger) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-danger) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-danger)
 
         &:before
           background: var(--admonitions-color-danger)
-          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M12 2c5.53 0 10 4.47 10 10s-4.47 10-10 10S2 17.53 2 12S6.47 2 12 2m3.59 5L12 10.59L8.41 7L7 8.41L10.59 12L7 15.59L8.41 17L12 13.41L15.59 17L17 15.59L13.41 12L17 8.41z'/%3E%3C/svg%3E")
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='currentColor' d='M13 13h-2V7h2m0 10h-2v-2h2M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20Z'/%3E%3C/svg%3E")
 
       &:before
         background: var(--admonitions-color-danger)
     &.bdm-cite
+      --admonition-accent: var(--admonitions-color-cite)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-cite) 70%, black(0.45)), color-mix(var(--admonitions-color-cite) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-cite) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-cite) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-cite)
 
@@ -80,6 +111,10 @@
       &:before
         background: var(--admonitions-color-cite)
     &.bdm-tip
+      --admonition-accent: var(--admonitions-color-tip)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-tip) 70%, black(0.45)), color-mix(var(--admonitions-color-tip) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-tip) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-tip) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-tip)
 
@@ -90,6 +125,10 @@
       &:before
         background: var(--admonitions-color-tip)
     &.bdm-important
+      --admonition-accent: var(--admonitions-color-important)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-important) 70%, black(0.45)), color-mix(var(--admonitions-color-important) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-important) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-important) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-important)
 
@@ -100,6 +139,10 @@
       &:before
         background: var(--admonitions-color-important)
     &.bdm-caution
+      --admonition-accent: var(--admonitions-color-caution)
+      background: linear-gradient(180deg, color-mix(var(--admonitions-color-caution) 70%, black(0.45)), color-mix(var(--admonitions-color-caution) 45%, black(0.65)))
+      background-color: color-mix(var(--admonitions-color-caution) 58%, black(0.65))
+      border-color: color-mix(var(--admonitions-color-caution) 70%, black(0.4))
       .bdm-title
         color: var(--admonitions-color-caution)
 
