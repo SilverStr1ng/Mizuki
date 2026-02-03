@@ -4,10 +4,10 @@ description: Intro to the std::string and std::string_view
 published: 2026-01-12
 pinned: false
 tags:
-  - cpp
+  - Cpp
   - string
 draft: false
-category: C++
+category: Cpp
 created: 2025-12-23
 ---
 虽然 C 风格的字符串字面量可以使用，但 C 风格的字符串变量的行为有些奇怪，难以使用（例如，无法使用赋值来将 C 风格的字符串变量赋值给新的值），而且是危险的（例如，如果您将一个更大的 C 风格的字符串复制到分配给较短 C 风格的字符串的空间中，将会导致未定义的行为）。在现代 C++中，最好避免使用 C 风格的字符串变量。
