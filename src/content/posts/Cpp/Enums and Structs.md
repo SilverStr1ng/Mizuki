@@ -8,7 +8,7 @@ tags:
   - CompoundTypes
   - Enum
   - Struct
-draft: true
+draft: false
 category: Cpp
 created: 2026-01-21
 ---
