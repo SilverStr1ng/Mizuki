@@ -637,7 +637,7 @@ export const live2dConfig: import("./types/config").Live2DConfig = {
 		},
 	],
 	dockedPosition: "left", // 停靠位置：left 或 right
-	initialStatus: "active", // 初始状态：sleep 或 active
+	initialStatus: "sleep", // 初始状态：sleep 或 active
 	mobileDisplay: false, // 移动端不显示
 	primaryColor: "#38B0DE", // 主题色
 	sayHello: false, // 打印项目信息
