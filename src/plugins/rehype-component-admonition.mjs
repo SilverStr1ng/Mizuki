@@ -1,6 +1,18 @@
 /// <reference types="mdast" />
 import { h } from "hastscript";
 
+const DEFAULT_TITLES = {
+	note: "Note",
+	info: "Info",
+	success: "Success",
+	warning: "Warning",
+	danger: "Danger",
+	cite: "Cite",
+	tip: "Tip",
+	important: "Important",
+	caution: "Caution",
+};
+
 /**
  * Creates an admonition component.
  *
@@ -25,15 +37,16 @@ export function AdmonitionComponent(properties, children, type) {
 		children = children.slice(1);
 	}
 
-	// 提取标题内容
 	const titleContent = label
 		? Array.isArray(label.children)
 			? label.children
 			: label
-		: type.toUpperCase();
+		: (DEFAULT_TITLES[type] ?? type.toUpperCase());
 
 	return h("blockquote", { class: `admonition bdm-${type}` }, [
-		h("span", { class: "bdm-title" }, titleContent),
-		...children,
+		h("div", { class: "bdm-header" }, [
+			h("span", { class: "bdm-title" }, titleContent),
+		]),
+		h("div", { class: "bdm-content" }, children),
 	]);
 }
