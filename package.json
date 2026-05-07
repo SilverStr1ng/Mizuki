@@ -3,10 +3,11 @@
 	"type": "module",
 	"version": "7.6.5",
 	"scripts": {
+		"clear-astro-cache": "node scripts/clear-astro-cache.js",
 		"sync-content": "node scripts/sync-content.js",
 		"init-content": "node scripts/init-content-repo.js",
-		"predev": "node scripts/sync-content.js || true",
-		"prebuild": "pnpm --filter oh-my-live2d build && node scripts/sync-content.js || true",
+		"predev": "node scripts/sync-content.js || true && node scripts/clear-astro-cache.js",
+		"prebuild": "pnpm --filter oh-my-live2d build && node scripts/sync-content.js || true && node scripts/clear-astro-cache.js",
 		"dev": "pnpm --filter oh-my-live2d build && astro dev",
 		"start": "pnpm --filter oh-my-live2d build && astro dev",
 		"check": "astro check",
