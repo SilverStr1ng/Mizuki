@@ -1,4 +1,5 @@
 import sitemap from "@astrojs/sitemap";
+import mdx from "@astrojs/mdx";
 import svelte, { vitePreprocess } from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -111,6 +112,7 @@ export default defineConfig({
 				showCopyToClipboardButton: false,
 			},
 		}),
+		mdx(),
 		svelte({
 			preprocess: vitePreprocess(),
 		}),

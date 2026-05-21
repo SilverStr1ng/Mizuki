@@ -624,7 +624,7 @@ export const sakuraConfig: SakuraConfig = {
  * 文档：https://oml2d.hacxy.cn/
  */
 export const live2dConfig: import("./types/config").Live2DConfig = {
-	enable: true, // 启用 Live2D 看板娘
+	enable: false, // 启用 Live2D 看板娘
 	models: [
 		{
 			path: "/nyaaaa/jk盐.model3.json", // moc3 模型路径
