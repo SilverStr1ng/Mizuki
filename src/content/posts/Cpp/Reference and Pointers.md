@@ -2,7 +2,7 @@
 title: References and Pointers
 description: 引用与指针简介，翻译自learncpp.com。
 published: 2026-01-14
-pinned: true
+pinned: false
 tags:
     - Cpp
     - reference
