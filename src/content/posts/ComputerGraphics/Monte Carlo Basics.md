@@ -97,10 +97,10 @@ $$
 
 期望值具有几个源于其定义的有用性质：
 $$
-\begin{align}
+\begin{aligned}
 E[af(x)]=aE[f(x)] \\ \\
 E\left[ \sum_{i=1}^{n}f(X_{i}) \right]=\sum_{i=1}^{n}E[f(X_{i})]  
-\end{align}
+\end{aligned}
 \tag{2}
 $$
 
@@ -115,13 +115,13 @@ $$
 
 $E[F_{n}]$ 等于积分。仅需几步即可证明这一点。首先，请注意，与随机变量 $X_{i}$ 对应的 **PDF** $p(x)$ 必须等于 $\frac{1}{b-a}$，因为 $p$ 不仅必须为常数，而且在定义域 $[a,b]$ 上的积分也必须为 1。接着利用方程 $(1)$ 和 $(2)$ 中的性质进行代数运算证明即可：
 $$
-\begin{align}
+\begin{aligned}
 E[F_{n}]&=E\left[ \frac{b-a}{n} \sum_{i=1}^{n}f(X_{i}) \right] \\
 &=\frac{b-a}{n} \sum_{i=1}^{n}E[f(X_{i})] \\
 &=\frac{b-a}{n} \sum_{i=1}^{n} \int_{a}^{b}f(x)p(x)dx \\
 &=\frac{1}{n} \sum_{i=1}^{n} \int_{a}^{b}f(x)dx \\
 &=\int_{a}^{b}f(x)dx
-\end{align}
+\end{aligned}
 $$
 
 将该估计量推广到多维或复杂积分域是直接的：从均匀的多维概率密度函数中抽取 $n$ 个独立样本 $X_{i}$，并以相同方式应用该估计量。例如，考虑以下三维积分
@@ -148,12 +148,12 @@ $$
 
 同样不难看出，该估计量的期望值正是所需 $f$ 的积分：
 $$
-\begin{align}
+\begin{aligned}
 E[F_{n}] &=E\left[ \frac{1}{n} \sum_{i=1}^{n} \frac{f(X_{i})}{p(X_{i})} \right] \\
 &= \frac{1}{n} \sum_{i=1}^{n} \int_{a}^{b} \frac{f(x)}{p(x)}p(x)dx \\
 &=\frac{1}{n} \sum_{i=1}^{n} \int_{a}^{b}f(x)dx \\
 &=\int_{a}^{b}f(x)dx
-\end{align}
+\end{aligned}
 $$
 
 方向在单位球面上均匀采样时，采样域的立体角为 $4\pi$，因此归一化后的常数 PDF 为 $\frac{1}{4\pi}$。当应用公式 $(3)$ 的估计量时，该常数值出现在除数项中。
